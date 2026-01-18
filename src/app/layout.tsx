@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ddin from "./fonts";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
   title: "DVI",
@@ -14,8 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={ddin.variable}>
-      <body className="antialiased">
+      <body className="antialiased dark">
+        <Header />
         <main className="flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );
