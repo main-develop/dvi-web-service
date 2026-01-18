@@ -1,0 +1,8 @@
+packages:
+  - .
+ignoredBuiltDependencies:
+  - sharp
+  - unrs-resolver
+blockExoticSubdeps: true
+minimumReleaseAge: 2880
+trustPolicy: no-downgrade
