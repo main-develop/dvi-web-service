@@ -11,6 +11,8 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+  --color-matrix: oklch(0.8664 0.294827 142.4953);
+  --color-matrix-50: oklch(0.8664 0.294827 142.4953 / 50%);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -129,4 +131,13 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+.matrix-text {
+  color: var(--color-matrix);
+  text-shadow: 0 2px 4px var(--color-matrix-50);
+}
+
+.matrix-box-shadow:hover {
+  box-shadow: 0 1px 6px var(--color-matrix-50);
 }
