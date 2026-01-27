@@ -1,4 +1,5 @@
 import { CharParticlesBackground } from "../components/CharParticlesBackground";
+import HeroSection from "../components/HeroSection";
 
 export default function Home() {
   return (
@@ -11,7 +12,7 @@ export default function Home() {
         size={0.4}
         color="#08CB00"
       />
-      <div className="h-[200vh]"></div>
+      <HeroSection />
     </>
   );
 }
