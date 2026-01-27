@@ -2,6 +2,7 @@
 
 import { motion, Variants } from "motion/react";
 import { Button } from "./ui/button";
+import { MatrixText } from "./ui/matrix-text";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -53,6 +54,13 @@ export default function HeroSection() {
           <h1 className="sm:leading-none leading-[1.10] pb-[1.10]">
             VISUALIZE WITH <span className="matrix-text">CONFIDENCE</span>:
           </h1>
+          <MatrixText
+            phrases={[
+              "SECURE DATA HANDLING",
+              "AFFORDABLE VISUALS",
+              "PRIVACY-FIRST ANALYTICS",
+            ]}
+          ></MatrixText>
         </motion.div>
         <motion.p
           className="pt-5 sm:px-0 px-6 sm:text-start text-center"
