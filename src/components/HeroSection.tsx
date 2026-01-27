@@ -3,6 +3,7 @@
 import { motion, Variants } from "motion/react";
 import { Button } from "./ui/button";
 import { MatrixText } from "./ui/matrix-text";
+import MockupTabs from "./ui/mockup-tabs";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -21,20 +22,6 @@ const itemVariants: Variants = {
     filter: "blur(0px)",
     y: 0,
     transition: { duration: 0.6 },
-  },
-};
-
-const buttonVariants: Variants = {
-  hidden: { opacity: 0, filter: "blur(4px)", y: 15 },
-  visible: {
-    opacity: 1,
-    filter: "blur(0px)",
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 10,
-    },
   },
 };
 
@@ -75,7 +62,15 @@ export default function HeroSection() {
             <motion.div
               className="backdrop-blur-xs"
               key={label}
-              variants={buttonVariants}
+              initial={{ opacity: 0, filter: "blur(4px)", y: 15 }}
+              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              transition={{
+                delay: 0.6 + index * 0.15,
+                duration: 0.6,
+                type: "spring",
+                stiffness: 100,
+                damping: 10,
+              }}
             >
               <Button className="uppercase matrix-box-shadow bg-matrix/10 hover:bg-matrix/15 transition-all border-1 border-matrix text-primary">
                 {label}
@@ -86,8 +81,12 @@ export default function HeroSection() {
       </motion.div>
       <motion.div
         className="flex flex-1 items-center justify-center"
-        variants={itemVariants}
-      ></motion.div>
+        initial={{ opacity: 0, filter: "blur(4px)", y: 15 }}
+        animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+      >
+        <MockupTabs />
+      </motion.div>
     </div>
   );
 }
