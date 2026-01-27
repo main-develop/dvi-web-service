@@ -3,6 +3,7 @@ import "./globals.css";
 import ddin from "./fonts";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { SmoothScrollProvider } from "../components/SmoothScrollProvider";
 
 export const metadata: Metadata = {
   title: "DVI",
@@ -18,7 +19,9 @@ export default function RootLayout({
     <html lang="en" className={ddin.variable}>
       <body className="antialiased dark">
         <Header />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1">
+          <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        </main>
         <Footer />
       </body>
     </html>
