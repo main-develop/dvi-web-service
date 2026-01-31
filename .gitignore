@@ -23,8 +23,6 @@
 # misc
 .DS_Store
 *.pem
-.prettierrc
-.prettierignore
 
 # debug
 npm-debug.log*
