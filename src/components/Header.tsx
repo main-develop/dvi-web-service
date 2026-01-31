@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Logo } from "./ui/logo";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { cn } from "../lib/utils";
+import { createPortal } from "react-dom";
 
 const navLinks = [
   { href: "/about", name: "ABOUT" },
@@ -14,8 +17,48 @@ const navLinks = [
   { href: "/help", name: "HELP" },
 ];
 
+const getNavLinks = (style: string = "") =>
+  navLinks.map((link) => (
+    <Link
+      key={link.name}
+      href={link.href}
+      className={cn(
+        style,
+        "text-primary-foreground text-opacity-60 font-semibold tracking-[0.04rem]",
+        "hover:text-primary/90 hover:text-opacity-100 transition",
+      )}
+    >
+      {link.name}
+    </Link>
+  ));
+
+const getSignButtons = (style: string = "") =>
+  ["SIGN IN", "SIGN UP"].map((label) => (
+    <Button
+      key={label}
+      className={`${style} sm:bg-primary/90 hover:bg-primary/80 tracking-tight transition-all`}
+    >
+      {label}
+    </Button>
+  ));
+
+const svgPathStyle = [
+  cn(
+    "group-aria-expanded:translate-x-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[315deg]",
+    "-translate-y-[7px] [transition-timing-function:cubic-bezier(.5,.85,.25,1.1)]",
+  ),
+  "[transition-timing-function:cubic-bezier(.5,.85,.25,1.8)] group-aria-expanded:rotate-45",
+  cn(
+    "group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[135deg]",
+    "translate-y-[7px] [transition-timing-function:cubic-bezier(.5,.85,.25,1.1)]",
+  ),
+];
+
 export default function Header() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,41 +69,98 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflowY = "hidden";
+
+      return () => {
+        document.body.style.overflowY = "auto";
+      };
+    }
+  }, [isMobileMenuOpen]);
+
   return (
     <motion.header
-      className={`sticky top-0 z-50 px-7 py-3 ${
-        isScrolled ? "backdrop-blur-sm shadow-md" : "bg-transparent"
-      }`}
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.2 }}
+      className={cn("sticky top-0 z-50 bg-transparent px-7 py-3", {
+        "shadow-md backdrop-blur-sm": isScrolled || isMobileMenuOpen,
+      })}
+      {...(isHome
+        ? {
+            initial: { opacity: 0, y: -20 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.6, delay: 0.2 },
+          }
+        : {})}
     >
-      <nav className="flex max-w-full mx-auto items-center">
-        <div className="flex-1 flex items-center justify-start">
+      <nav className="mx-auto flex max-w-full items-center">
+        <div className="flex items-center justify-start">
           <Logo />
         </div>
-        <ul className="sm:flex hidden px-6 gap-7 items-center">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="text-sm text-primary-foreground font-semibold tracking-[0.04rem] hover:text-primary/90 text-opacity-60 hover:text-opacity-100 transition"
+        <div className="hidden flex-1 md:flex">
+          <ul className="flex flex-1 items-center justify-center gap-7 px-6">
+            {getNavLinks("text-sm")}
+          </ul>
+          <div className="flex justify-end gap-2">{getSignButtons()}</div>
+        </div>
+        <div className="flex flex-1 items-center justify-end md:hidden">
+          <Button
+            className="group scale-170"
+            variant="ghost"
+            onClick={() => setIsMobileMenuOpen((prevState) => !prevState)}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-menu"
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            <svg
+              width={16}
+              height={16}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              {link.name}
-            </Link>
-          ))}
-        </ul>
-        <div className="flex flex-1 gap-2 justify-end">
-          {["SIGN IN", "SIGN UP"].map((label) => (
-            <Button
-              key={label}
-              className="tracking-tight sm:bg-primary/90 hover:bg-primary/80 transition-all"
-            >
-              {label}
-            </Button>
-          ))}
+              {svgPathStyle.map((style, index) => (
+                <path
+                  key={`path-${index}`}
+                  d="M4 12L20 12"
+                  className={`origin-center transition-all duration-300 ${style}`}
+                />
+              ))}
+            </svg>
+          </Button>
         </div>
       </nav>
+      {typeof window === "undefined"
+        ? null
+        : createPortal(
+            <AnimatePresence>
+              {isMobileMenuOpen && (
+                <motion.div
+                  key="mobile-menu"
+                  id="mobile-menu"
+                  className={cn(
+                    "bg-background/95 supports-[backdrop-filter]:bg-background/50 backdrop-blur-lg",
+                    "fixed top-14 right-0 bottom-0 left-0 z-50 flex flex-col overflow-hidden px-7 py-5 md:hidden",
+                  )}
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                  <ul className="flex flex-col items-start gap-y-4">
+                    {getNavLinks("text-lg")}
+                  </ul>
+                  <div className="flex flex-col gap-2 pt-8">
+                    {getSignButtons("h-10")}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>,
+            document.body,
+          )}
     </motion.header>
   );
 }
