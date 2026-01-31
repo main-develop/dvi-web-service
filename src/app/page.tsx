@@ -2,6 +2,7 @@ import { CharParticlesBackground } from "../components/CharParticlesBackground";
 import HeroSection from "../components/HeroSection";
 
 export default function Home() {
+  // TODO: Make responsible on md devices
   return (
     <>
       <CharParticlesBackground

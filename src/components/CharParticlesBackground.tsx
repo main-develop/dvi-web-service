@@ -202,7 +202,7 @@ const CharParticlesBackground: React.FC<CharParticlesProps> = ({
     const pSize = Math.floor(Math.random() * 8) + 10 + size * 10;
     const alpha = 0;
     const targetAlpha = Number.parseFloat(
-      (Math.random() * 0.6 + 0.1).toFixed(1)
+      (Math.random() * 0.6 + 0.1).toFixed(1),
     );
     const dx = (Math.random() - 0.5) * 0.1;
     const dy = (Math.random() - 0.5) * 0.1;
@@ -254,7 +254,7 @@ const CharParticlesBackground: React.FC<CharParticlesProps> = ({
       context.current.rotate(rotation);
       context.current.font = `${size}px`;
       context.current.fillStyle = `rgba(${hexToRgb(color).join(
-        ", "
+        ", ",
       )}, ${alpha})`;
       context.current.textAlign = "center";
       context.current.textBaseline = "middle";
@@ -273,7 +273,7 @@ const CharParticlesBackground: React.FC<CharParticlesProps> = ({
         0,
         0,
         canvasSize.current.w,
-        canvasSize.current.h
+        canvasSize.current.h,
       );
     }
   };
@@ -293,7 +293,7 @@ const CharParticlesBackground: React.FC<CharParticlesProps> = ({
     start1: number,
     end1: number,
     start2: number,
-    end2: number
+    end2: number,
   ): number => {
     const remapped =
       ((value - start1) * (end2 - start2)) / (end1 - start1) + start2;
@@ -342,7 +342,7 @@ const CharParticlesBackground: React.FC<CharParticlesProps> = ({
       ];
       const closestEdge = edge.reduce((a, b) => Math.min(a, b));
       const remapClosestEdge = Number.parseFloat(
-        remapValue(closestEdge, 0, 20, 0, 1).toFixed(2)
+        remapValue(closestEdge, 0, 20, 0, 1).toFixed(2),
       );
 
       if (remapClosestEdge > 1) {

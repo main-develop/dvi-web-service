@@ -4,6 +4,7 @@ import { motion, Variants } from "motion/react";
 import { Button } from "./ui/button";
 import { MatrixText } from "./ui/matrix-text";
 import MockupTabs from "./ui/mockup-tabs";
+import { cn } from "../lib/utils";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -27,18 +28,18 @@ const itemVariants: Variants = {
 
 export default function HeroSection() {
   return (
-    <div className="flex sm:flex-row flex-col sm:pl-22 sm:pr-0 px-5">
+    <div className="flex flex-col px-5 sm:flex-row sm:pr-0 sm:pl-22">
       <motion.div
-        className="flex flex-col sm:w-fit h-screen justify-center"
+        className="flex h-screen flex-col justify-center sm:w-fit"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
         <motion.div
-          className="sm:text-5xl text-3xl sm:text-start text-center font-semibold"
+          className="text-center text-3xl font-semibold sm:text-start sm:text-5xl"
           variants={itemVariants}
         >
-          <h1 className="sm:leading-none leading-[1.10] pb-[1.10]">
+          <h1 className="pb-[1.10] leading-[1.10] sm:leading-none">
             VISUALIZE WITH <span className="matrix-text">CONFIDENCE</span>:
           </h1>
           <MatrixText
@@ -47,17 +48,17 @@ export default function HeroSection() {
               "AFFORDABLE VISUALS",
               "PRIVACY-FIRST ANALYTICS",
             ]}
-          ></MatrixText>
+          />
         </motion.div>
         <motion.p
-          className="pt-5 sm:px-0 px-6 sm:text-start text-center"
+          className="px-6 pt-5 text-center sm:px-0 sm:text-start"
           variants={itemVariants}
         >
           Build, share, and analyze visualizations without the risks —
           engineered with your data's safety <br /> in mind, DVI makes analytics
           infrastructure accessible to everyone.
         </motion.p>
-        <div className="flex pt-5 gap-4 sm:justify-start justify-center">
+        <div className="flex justify-center gap-4 pt-5 sm:justify-start">
           {["Get Started", "View Showcase"].map((label, index) => (
             <motion.div
               className="backdrop-blur-xs"
@@ -72,7 +73,12 @@ export default function HeroSection() {
                 damping: 10,
               }}
             >
-              <Button className="uppercase matrix-box-shadow bg-matrix/10 hover:bg-matrix/15 transition-all border-1 border-matrix text-primary">
+              <Button
+                className={cn(
+                  "matrix-box-shadow bg-matrix/10 hover:bg-matrix/15 border-matrix text-primary",
+                  "border-1 uppercase transition-all",
+                )}
+              >
                 {label}
               </Button>
             </motion.div>

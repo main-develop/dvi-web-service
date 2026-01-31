@@ -3,6 +3,7 @@
 import { Card, CardContent } from "./card";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { cn } from "@/src/lib/utils";
 
 interface TabConfig {
   label: string;
@@ -58,7 +59,7 @@ export default function MockupTabs({ tabs = defaultTabs }: MockupTabsProps) {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="flex select-none items-end justify-center w-full sm:min-h-[400px] min-h-[80px]">
+      <div className="flex min-h-[80px] w-full items-end justify-center select-none sm:min-h-[400px]">
         <AnimatePresence mode="wait">
           <motion.img
             key={activeIndex}
@@ -78,30 +79,35 @@ export default function MockupTabs({ tabs = defaultTabs }: MockupTabsProps) {
         </AnimatePresence>
       </div>
       {/* Tabs */}
-      <Card className="border-none bg-transparent shadow-none relative flex items-center justify-center">
+      <Card className="relative flex items-center justify-center border-none bg-transparent shadow-none">
         <CardContent className="p-0">
           <div className="relative">
             {/* Active indicator */}
             <motion.div
-              className="absolute bottom-[-0px] h-[2px] bg-matrix transition-all duration-400 ease-out"
+              className="bg-matrix absolute bottom-[-0px] h-[2px] transition-all duration-400 ease-out"
               style={activeStyle}
             />
             {/* Tab buttons */}
-            <div className="relative flex space-x-[6px] items-center">
+            <div className="relative flex items-center space-x-[6px]">
               {tabs.map((tab, index) => (
                 <div
                   key={index}
                   ref={(el) => {
                     tabRefs.current[index] = el;
                   }}
-                  className={`px-3 py-2 cursor-pointer transition-colors duration-300 h-[30px] ${
-                    index === activeIndex
-                      ? "text-primary"
-                      : "text-primary-foreground hover:text-primary"
-                  }`}
+                  className={cn(
+                    "text-primary-foreground hover:text-primary h-[30px] cursor-pointer px-3 py-2",
+                    "transition-colors duration-300",
+                    { "text-primary": index === activeIndex },
+                  )}
                   onClick={() => setActiveIndex(index)}
                 >
-                  <div className="flex uppercase select-none text-[0.813rem] whitespace-nowrap items-center justify-center h-full">
+                  <div
+                    className={cn(
+                      "flex text-[0.813rem] whitespace-nowrap uppercase select-none",
+                      "h-full items-center justify-center",
+                    )}
+                  >
                     {tab.label}
                   </div>
                 </div>

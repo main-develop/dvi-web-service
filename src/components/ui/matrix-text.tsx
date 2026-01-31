@@ -36,7 +36,7 @@ export const MatrixText = ({
   // Find the longest phrase to use as the base width
   const longestPhrase = useMemo(
     () => phrases.reduce((a, b) => (a.length > b.length ? a : b), ""),
-    [phrases]
+    [phrases],
   );
 
   // Initialize all letters as hidden
@@ -45,12 +45,12 @@ export const MatrixText = ({
       char,
       phase: "hidden",
       isSpace: char === " ",
-    }))
+    })),
   );
 
   const getRandomChar = useCallback(
     () => (Math.random() > 0.5 ? "1" : "0"),
-    []
+    [],
   );
 
   // Clear all pending animation timeouts
@@ -70,7 +70,7 @@ export const MatrixText = ({
           char,
           phase: "hidden",
           isSpace: char === " ",
-        }))
+        })),
       );
 
       // Animate each letter one by one
@@ -94,34 +94,37 @@ export const MatrixText = ({
 
         // Reveal actual character
         if (!isSpace) {
-          const revealTimeout = setTimeout(() => {
-            setLetters((prev) => {
-              const newLetters = [...prev];
-              newLetters[index] = {
-                char: targetPhrase[index],
-                phase: "revealed",
-                isSpace: false,
-              };
-              return newLetters;
-            });
+          const revealTimeout = setTimeout(
+            () => {
+              setLetters((prev) => {
+                const newLetters = [...prev];
+                newLetters[index] = {
+                  char: targetPhrase[index],
+                  phase: "revealed",
+                  isSpace: false,
+                };
+                return newLetters;
+              });
 
-            // Call onComplete after last letter is revealed
-            if (index === targetPhrase.length - 1 && onComplete) {
-              onComplete();
-            }
-          }, index * letterInterval + letterRevealDelay);
+              // Call onComplete after last letter is revealed
+              if (index === targetPhrase.length - 1 && onComplete) {
+                onComplete();
+              }
+            },
+            index * letterInterval + letterRevealDelay,
+          );
 
           animationTimeoutsRef.current.push(revealTimeout);
         } else if (index === targetPhrase.length - 1 && onComplete) {
           const completeTimeout = setTimeout(
             onComplete,
-            index * letterInterval
+            index * letterInterval,
           );
           animationTimeoutsRef.current.push(completeTimeout);
         }
       });
     },
-    [getRandomChar, letterInterval, letterRevealDelay, clearAnimationTimeouts]
+    [getRandomChar, letterInterval, letterRevealDelay, clearAnimationTimeouts],
   );
 
   // Animate letters transitioning: revealed -> matrix -> new revealed
@@ -141,7 +144,7 @@ export const MatrixText = ({
           char,
           phase: "revealed",
           isSpace: char === " ",
-        }))
+        })),
       );
 
       // Animate each letter position
@@ -180,23 +183,26 @@ export const MatrixText = ({
         animationTimeoutsRef.current.push(toMatrixTimeout);
 
         // Reveal new character
-        const revealTimeout = setTimeout(() => {
-          setLetters((prev) => {
-            const newLetters = [...prev];
-            if (index < newLetters.length) {
-              newLetters[index] = {
-                char: toChar,
-                phase: isToSpace ? "hidden" : "revealed",
-                isSpace: isToSpace,
-              };
-            }
-            // Trim array to target phrase length after last letter
-            if (index === maxLength - 1) {
-              return newLetters.slice(0, toPhrase.length);
-            }
-            return newLetters;
-          });
-        }, index * letterInterval + letterRevealDelay);
+        const revealTimeout = setTimeout(
+          () => {
+            setLetters((prev) => {
+              const newLetters = [...prev];
+              if (index < newLetters.length) {
+                newLetters[index] = {
+                  char: toChar,
+                  phase: isToSpace ? "hidden" : "revealed",
+                  isSpace: isToSpace,
+                };
+              }
+              // Trim array to target phrase length after last letter
+              if (index === maxLength - 1) {
+                return newLetters.slice(0, toPhrase.length);
+              }
+              return newLetters;
+            });
+          },
+          index * letterInterval + letterRevealDelay,
+        );
 
         animationTimeoutsRef.current.push(revealTimeout);
       }
@@ -205,12 +211,12 @@ export const MatrixText = ({
       if (onComplete) {
         const completeTimeout = setTimeout(
           onComplete,
-          maxLength * letterInterval + letterRevealDelay + 50
+          maxLength * letterInterval + letterRevealDelay + 50,
         );
         animationTimeoutsRef.current.push(completeTimeout);
       }
     },
-    [getRandomChar, letterInterval, letterRevealDelay, clearAnimationTimeouts]
+    [getRandomChar, letterInterval, letterRevealDelay, clearAnimationTimeouts],
   );
 
   // Initial animation
@@ -259,21 +265,15 @@ export const MatrixText = ({
 
   const motionVariants = useMemo(
     () => ({
-      hidden: {
-        opacity: 0,
-      },
+      hidden: { opacity: 0 },
       matrix: {
         opacity: 1,
         color: "var(--color-matrix)",
         textShadow: "0 0 8px var(--color-matrix-80)",
       },
-      revealed: {
-        opacity: 1,
-        color: "",
-        textShadow: "",
-      },
+      revealed: { opacity: 1 },
     }),
-    []
+    [],
   );
 
   return (
