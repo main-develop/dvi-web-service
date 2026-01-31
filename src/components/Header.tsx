@@ -24,8 +24,7 @@ const getNavLinks = (style: string = "") =>
       href={link.href}
       className={cn(
         style,
-        "text-primary-foreground text-opacity-60 font-semibold tracking-[0.04rem]",
-        "hover:text-primary/90 hover:text-opacity-100 transition",
+        "text-primary-foreground hover:text-primary/90 font-semibold tracking-[0.04rem] transition",
       )}
     >
       {link.name}
@@ -150,12 +149,8 @@ export default function Header() {
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
-                  <ul className="flex flex-col items-start gap-y-4">
-                    {getNavLinks("text-lg")}
-                  </ul>
-                  <div className="flex flex-col gap-2 pt-8">
-                    {getSignButtons("h-10")}
-                  </div>
+                  <ul className="flex flex-col items-start gap-y-4">{getNavLinks("text-lg")}</ul>
+                  <div className="flex flex-col gap-2 pt-8">{getSignButtons("h-10")}</div>
                 </motion.div>
               )}
             </AnimatePresence>,

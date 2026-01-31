@@ -39,7 +39,6 @@ export const MatrixText = ({
     [phrases],
   );
 
-  // Initialize all letters as hidden
   const [letters, setLetters] = useState<LetterState[]>(() =>
     currentPhrase.split("").map((char) => ({
       char,
@@ -48,23 +47,18 @@ export const MatrixText = ({
     })),
   );
 
-  const getRandomChar = useCallback(
-    () => (Math.random() > 0.5 ? "1" : "0"),
-    [],
-  );
+  const getRandomChar = useCallback(() => (Math.random() > 0.5 ? "1" : "0"), []);
 
-  // Clear all pending animation timeouts
   const clearAnimationTimeouts = useCallback(() => {
     animationTimeoutsRef.current.forEach(clearTimeout);
     animationTimeoutsRef.current = [];
   }, []);
 
-  // Animate letters appearing: hidden -> matrix -> revealed
+  // Stable animation functions
   const animateIn = useCallback(
     (targetPhrase: string, onComplete?: () => void) => {
       clearAnimationTimeouts();
 
-      // Initialize letters as hidden
       setLetters(
         targetPhrase.split("").map((char) => ({
           char,
@@ -73,11 +67,10 @@ export const MatrixText = ({
         })),
       );
 
-      // Animate each letter one by one
       targetPhrase.split("").forEach((char, index) => {
         const isSpace = char === " ";
 
-        // Show matrix character (0 or 1)
+        // Matrix char
         const showMatrixTimeout = setTimeout(() => {
           setLetters((prev) => {
             const newLetters = [...prev];
@@ -92,7 +85,6 @@ export const MatrixText = ({
 
         animationTimeoutsRef.current.push(showMatrixTimeout);
 
-        // Reveal actual character
         if (!isSpace) {
           const revealTimeout = setTimeout(
             () => {
@@ -106,7 +98,6 @@ export const MatrixText = ({
                 return newLetters;
               });
 
-              // Call onComplete after last letter is revealed
               if (index === targetPhrase.length - 1 && onComplete) {
                 onComplete();
               }
@@ -116,10 +107,7 @@ export const MatrixText = ({
 
           animationTimeoutsRef.current.push(revealTimeout);
         } else if (index === targetPhrase.length - 1 && onComplete) {
-          const completeTimeout = setTimeout(
-            onComplete,
-            index * letterInterval,
-          );
+          const completeTimeout = setTimeout(onComplete, index * letterInterval);
           animationTimeoutsRef.current.push(completeTimeout);
         }
       });
@@ -127,18 +115,14 @@ export const MatrixText = ({
     [getRandomChar, letterInterval, letterRevealDelay, clearAnimationTimeouts],
   );
 
-  // Animate letters transitioning: revealed -> matrix -> new revealed
   const animateTransition = useCallback(
     (fromPhrase: string, toPhrase: string, onComplete?: () => void) => {
       clearAnimationTimeouts();
 
       const maxLength = Math.max(fromPhrase.length, toPhrase.length);
-
-      // Pad phrases to equal length for animation
       const paddedFrom = fromPhrase.padEnd(maxLength, " ");
       const paddedTo = toPhrase.padEnd(maxLength, " ");
 
-      // Start with current revealed state
       setLetters(
         paddedFrom.split("").map((char) => ({
           char,
@@ -147,18 +131,13 @@ export const MatrixText = ({
         })),
       );
 
-      // Animate each letter position
       for (let index = 0; index < maxLength; index++) {
         const fromChar = paddedFrom[index];
         const toChar = paddedTo[index];
         const isToSpace = toChar === " ";
 
-        // If characters are the same, skip animation for this position
-        if (fromChar === toChar) {
-          continue;
-        }
+        if (fromChar === toChar) continue;
 
-        // Change to matrix (0 or 1)
         const toMatrixTimeout = setTimeout(() => {
           setLetters((prev) => {
             const newLetters = [...prev];
@@ -169,7 +148,6 @@ export const MatrixText = ({
                 isSpace: isToSpace,
               };
             } else {
-              // Add new letter if needed
               newLetters.push({
                 char: getRandomChar(),
                 phase: "matrix",
@@ -182,7 +160,6 @@ export const MatrixText = ({
 
         animationTimeoutsRef.current.push(toMatrixTimeout);
 
-        // Reveal new character
         const revealTimeout = setTimeout(
           () => {
             setLetters((prev) => {
@@ -194,7 +171,6 @@ export const MatrixText = ({
                   isSpace: isToSpace,
                 };
               }
-              // Trim array to target phrase length after last letter
               if (index === maxLength - 1) {
                 return newLetters.slice(0, toPhrase.length);
               }
@@ -207,7 +183,6 @@ export const MatrixText = ({
         animationTimeoutsRef.current.push(revealTimeout);
       }
 
-      // Call onComplete after all animations finish
       if (onComplete) {
         const completeTimeout = setTimeout(
           onComplete,
@@ -219,11 +194,10 @@ export const MatrixText = ({
     [getRandomChar, letterInterval, letterRevealDelay, clearAnimationTimeouts],
   );
 
-  // Initial animation
+  // Initial animation (only once)
   useEffect(() => {
     const timer = setTimeout(() => {
       animateIn(currentPhrase, () => {
-        // Start phrase cycling after initial animation completes
         if (phrases.length > 1) {
           phraseTimerRef.current = setTimeout(() => {
             setCurrentPhraseIndex(1);
@@ -237,20 +211,26 @@ export const MatrixText = ({
       clearAnimationTimeouts();
       if (phraseTimerRef.current) clearTimeout(phraseTimerRef.current);
     };
+
+    // Intentionally leave this empty + suppress warning
+    // This effect should run only once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Handle phrase transitions
+  // Phrase change/cycling
   const prevPhraseIndexRef = useRef(0);
+
   useEffect(() => {
+    // Skip initial render (handled by the mount effect)
     if (currentPhraseIndex === 0 && prevPhraseIndexRef.current === 0) {
-      return; // Skip initial render
+      prevPhraseIndexRef.current = currentPhraseIndex;
+      return;
     }
 
     const prevPhrase = phrases[prevPhraseIndexRef.current];
     prevPhraseIndexRef.current = currentPhraseIndex;
 
     animateTransition(prevPhrase, currentPhrase, () => {
-      // Schedule next phrase change
       if (phrases.length > 1) {
         phraseTimerRef.current = setTimeout(() => {
           setCurrentPhraseIndex((prev) => (prev + 1) % phrases.length);
@@ -261,7 +241,7 @@ export const MatrixText = ({
     return () => {
       if (phraseTimerRef.current) clearTimeout(phraseTimerRef.current);
     };
-  }, [currentPhraseIndex]);
+  }, [currentPhrase, currentPhraseIndex, animateTransition, phrases, phraseDuration]);
 
   const motionVariants = useMemo(
     () => ({
@@ -279,12 +259,12 @@ export const MatrixText = ({
   return (
     <div className={className}>
       <div className="relative">
-        {/* Invisible longest phrase for consistent width */}
+        {/* Invisible spacer for consistent width */}
         <span className="invisible whitespace-pre">{longestPhrase}</span>
-        {/* Actual animated content */}
+        {/* Animated phrase */}
         <div className="absolute inset-0">
-          {letters.map((letter, index) => {
-            return letter.isSpace ? (
+          {letters.map((letter, index) =>
+            letter.isSpace ? (
               <span key={index} className="inline-block w-[0.3em]" />
             ) : (
               <span
@@ -292,22 +272,18 @@ export const MatrixText = ({
                 className="relative inline-block align-top"
                 style={{ lineHeight: 1 }}
               >
-                {/* Animated character positioned on top, centered */}
                 <motion.span
                   className="flex items-center justify-center"
                   initial="hidden"
                   animate={letter.phase}
                   variants={motionVariants}
-                  transition={{
-                    duration: 0.1,
-                    ease: "easeOut",
-                  }}
+                  transition={{ duration: 0.1, ease: "easeOut" }}
                 >
                   {letter.char}
                 </motion.span>
               </span>
-            );
-          })}
+            ),
+          )}
         </div>
       </div>
     </div>

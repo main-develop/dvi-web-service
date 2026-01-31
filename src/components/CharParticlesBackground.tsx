@@ -2,12 +2,7 @@
 
 import { cn } from "@/src/lib/utils";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
-
-interface MousePosition {
-  x: number;
-  y: number;
-}
+import { useEffect, useRef } from "react";
 
 interface CharParticlesProps {
   className?: string;
@@ -47,45 +42,9 @@ type CharParticle = {
 };
 
 const DEFAULT_CHARACTERS = [
-  "0",
-  "0.4",
-  "1",
-  "1.2",
-  "2",
-  "2.6",
-  "3",
-  "3.1",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "M",
-  "F",
-  "X",
-  "Y",
+  "0", "0.4", "1", "1.2", "2", "2.6", "3", "3.1", "4", "5",
+  "6", "7", "8", "9", "M", "F", "X", "Y",
 ];
-
-function MousePosition(): MousePosition {
-  const [mousePosition, setMousePosition] = useState<MousePosition>({
-    x: 0,
-    y: 0,
-  });
-
-  useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      setMousePosition({ x: event.clientX, y: event.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
-
-  return mousePosition;
-}
 
 function hexToRgb(hex: string): number[] {
   hex = hex.replace("#", "");
@@ -95,13 +54,8 @@ function hexToRgb(hex: string): number[] {
       .map((char) => char + char)
       .join("");
   }
-
   const hexInt = Number.parseInt(hex, 16);
-  const red = (hexInt >> 16) & 255;
-  const green = (hexInt >> 8) & 255;
-  const blue = hexInt & 255;
-
-  return [red, green, blue];
+  return [(hexInt >> 16) & 255, (hexInt >> 8) & 255, hexInt & 255];
 }
 
 const CharParticlesBackground: React.FC<CharParticlesProps> = ({
@@ -118,280 +72,222 @@ const CharParticlesBackground: React.FC<CharParticlesProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
-  const context = useRef<CanvasRenderingContext2D | null>(null);
-  const charParticles = useRef<CharParticle[]>([]);
-  const mousePosition = MousePosition();
-  const mouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
+  const contextRef = useRef<CanvasRenderingContext2D | null>(null);
+  const particlesRef = useRef<CharParticle[]>([]);
+  const mouseRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const canvasSizeRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
+  const animationTimeRef = useRef(0);
+  const lastFrameTimeRef = useRef(0);
+  const previousWidthRef = useRef(0);
+  const rafRef = useRef<number | null>(null);
+
   const dpr = typeof window !== "undefined" ? window.devicePixelRatio : 1;
-  const animationTime = useRef<number>(0);
-  const lastFrameTime = useRef<number>(0);
-  const previousWidth = useRef<number>(0);
 
-  useEffect(() => {
-    if (canvasRef.current) {
-      context.current = canvasRef.current.getContext("2d");
-    }
-    initCanvas();
-    if (canvasContainerRef.current) {
-      previousWidth.current = canvasContainerRef.current.offsetWidth;
-    }
-    animate();
-    window.addEventListener("resize", handleResize);
+  const createParticle = (): CharParticle => {
+    const w = canvasSizeRef.current.w;
+    const h = canvasSizeRef.current.h;
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [color]);
-
-  useEffect(() => {
-    onMouseMove();
-  }, [mousePosition.x, mousePosition.y]);
-
-  useEffect(() => {
-    initCanvas();
-  }, [refresh]);
-
-  const initCanvas = () => {
-    resizeCanvas();
-    drawCharParticles();
-  };
-
-  const onMouseMove = () => {
-    if (canvasRef.current) {
-      const rect = canvasRef.current.getBoundingClientRect();
-      const { w, h } = canvasSize.current;
-      const x = mousePosition.x - rect.left - w / 2;
-      const y = mousePosition.y - rect.top - h / 2;
-      const inside = x < w / 2 && x > -w / 2 && y < h / 2 && y > -h / 2;
-      if (inside) {
-        mouse.current.x = x;
-        mouse.current.y = y;
-      }
-    }
-  };
-
-  const resizeCanvas = () => {
-    if (canvasContainerRef.current && canvasRef.current && context.current) {
-      charParticles.current.length = 0;
-      canvasSize.current.w = canvasContainerRef.current.offsetWidth;
-      canvasSize.current.h = canvasContainerRef.current.offsetHeight;
-      canvasRef.current.width = canvasSize.current.w * dpr;
-      canvasRef.current.height = canvasSize.current.h * dpr;
-      canvasRef.current.style.width = `${canvasSize.current.w}px`;
-      canvasRef.current.style.height = `${canvasSize.current.h}px`;
-      context.current.scale(dpr, dpr);
-    }
-  };
-
-  const resizeCanvasHeightOnly = () => {
-    if (canvasContainerRef.current && canvasRef.current && context.current) {
-      const newHeight = canvasContainerRef.current.offsetHeight;
-      canvasSize.current.h = newHeight;
-      canvasRef.current.height = newHeight * dpr;
-      canvasRef.current.style.height = `${newHeight}px`;
-      context.current.scale(dpr, dpr);
-    }
-  };
-
-  const charParticleParams = (): CharParticle => {
-    const x = Math.floor(Math.random() * canvasSize.current.w);
-    const y = Math.floor(Math.random() * canvasSize.current.h);
-    const translateX = 0;
-    const translateY = 0;
+    const x = Math.floor(Math.random() * w);
+    const y = Math.floor(Math.random() * h);
     const pSize = Math.floor(Math.random() * 8) + 10 + size * 10;
-    const alpha = 0;
-    const targetAlpha = Number.parseFloat(
-      (Math.random() * 0.6 + 0.1).toFixed(1),
-    );
-    const dx = (Math.random() - 0.5) * 0.1;
-    const dy = (Math.random() - 0.5) * 0.1;
-    const magnetism = 0.1 + Math.random() * 4;
-    const character = characters[Math.floor(Math.random() * characters.length)];
-    const baseX = x;
-    const baseY = y;
-    const phaseX = Math.random() * Math.PI * 2;
-    const phaseY = Math.random() * Math.PI * 2;
-    const amplitudeX = 20 + Math.random() * 30;
-    const amplitudeY = 20 + Math.random() * 30;
-    const speedX = 0.05 + Math.random() * 0.005;
-    const speedY = 0.05 + Math.random() * 0.005;
-    const rotation = Math.random() * Math.PI * 2;
-    const rotationSpeed = (Math.random() - 0.5) * 0.5; // radians per second
 
     return {
       x,
       y,
-      translateX,
-      translateY,
+      translateX: 0,
+      translateY: 0,
       size: pSize,
-      alpha,
-      targetAlpha,
-      dx,
-      dy,
-      magnetism,
-      character,
-      baseX,
-      baseY,
-      phaseX,
-      phaseY,
-      amplitudeX,
-      amplitudeY,
-      speedX,
-      speedY,
-      rotation,
-      rotationSpeed,
+      alpha: 0,
+      targetAlpha: Number.parseFloat((Math.random() * 0.6 + 0.1).toFixed(1)),
+      dx: (Math.random() - 0.5) * 0.1,
+      dy: (Math.random() - 0.5) * 0.1,
+      magnetism: 0.1 + Math.random() * 4,
+      character: characters[Math.floor(Math.random() * characters.length)],
+      baseX: x,
+      baseY: y,
+      phaseX: Math.random() * Math.PI * 2,
+      phaseY: Math.random() * Math.PI * 2,
+      amplitudeX: 20 + Math.random() * 30,
+      amplitudeY: 20 + Math.random() * 30,
+      speedX: 0.05 + Math.random() * 0.005,
+      speedY: 0.05 + Math.random() * 0.005,
+      rotation: Math.random() * Math.PI * 2,
+      rotationSpeed: (Math.random() - 0.5) * 0.5,
     };
   };
 
-  const drawCharParticle = (charParticle: CharParticle, update = false) => {
-    if (context.current) {
-      const { x, y, translateX, translateY, size, alpha, character, rotation } =
-        charParticle;
+  const drawParticle = (p: CharParticle, update = false) => {
+    const ctx = contextRef.current;
+    if (!ctx) return;
 
-      context.current.save();
-      context.current.translate(x + translateX, y + translateY);
-      context.current.rotate(rotation);
-      context.current.font = `${size}px`;
-      context.current.fillStyle = `rgba(${hexToRgb(color).join(
-        ", ",
-      )}, ${alpha})`;
-      context.current.textAlign = "center";
-      context.current.textBaseline = "middle";
-      context.current.fillText(character, 0, 0);
-      context.current.restore();
+    ctx.save();
+    ctx.translate(p.x + p.translateX, p.y + p.translateY);
+    ctx.rotate(p.rotation);
+    ctx.font = `${p.size}px`;
+    ctx.fillStyle = `rgba(${hexToRgb(color).join(", ")}, ${p.alpha})`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(p.character, 0, 0);
+    ctx.restore();
 
-      if (!update) {
-        charParticles.current.push(charParticle);
-      }
+    if (!update) {
+      particlesRef.current.push(p);
     }
   };
 
-  const clearContext = () => {
-    if (context.current) {
-      context.current.clearRect(
-        0,
-        0,
-        canvasSize.current.w,
-        canvasSize.current.h,
-      );
+  const regenerateParticles = () => {
+    const ctx = contextRef.current;
+    if (!ctx) return;
+
+    particlesRef.current.length = 0;
+
+    ctx.clearRect(0, 0, canvasSizeRef.current.w, canvasSizeRef.current.h);
+
+    for (let i = 0; i < quantity; i++) {
+      const p = createParticle();
+      drawParticle(p);
     }
   };
 
-  const drawCharParticles = () => {
-    clearContext();
+  const resize = () => {
+    const container = canvasContainerRef.current;
+    const canvas = canvasRef.current;
+    const ctx = contextRef.current;
+    if (!container || !canvas || !ctx) return;
 
-    const charParticleCount = quantity;
-    for (let i = 0; i < charParticleCount; i++) {
-      const charParticle = charParticleParams();
-      drawCharParticle(charParticle);
+    const newWidth = container.offsetWidth;
+    const newHeight = container.offsetHeight;
+
+    const widthChangedSignificantly = Math.abs(newWidth - previousWidthRef.current) > 1;
+
+    canvasSizeRef.current = { w: newWidth, h: newHeight };
+    previousWidthRef.current = newWidth;
+
+    canvas.width = newWidth * dpr;
+    canvas.height = newHeight * dpr;
+    canvas.style.width = `${newWidth}px`;
+    canvas.style.height = `${newHeight}px`;
+
+    ctx.scale(dpr, dpr);
+
+    if (widthChangedSignificantly) {
+      regenerateParticles();
     }
+    // else: height-only change, just keep existing particles
   };
 
-  const remapValue = (
-    value: number,
-    start1: number,
-    end1: number,
-    start2: number,
-    end2: number,
-  ): number => {
-    const remapped =
-      ((value - start1) * (end2 - start2)) / (end1 - start1) + start2;
-
-    return remapped > 0 ? remapped : 0;
-  };
-
-  const animate = (timestamp = 0) => {
-    if (lastFrameTime.current === 0) {
-      lastFrameTime.current = timestamp;
+  // animation loop
+  const animate = (timestamp: number) => {
+    if (lastFrameTimeRef.current === 0) {
+      lastFrameTimeRef.current = timestamp;
     }
 
-    const deltaTime = (timestamp - lastFrameTime.current) / 1000; // convert to seconds
-    lastFrameTime.current = timestamp;
-    animationTime.current += deltaTime;
+    const delta = (timestamp - lastFrameTimeRef.current) / 1000;
+    lastFrameTimeRef.current = timestamp;
+    animationTimeRef.current += delta;
 
-    clearContext();
-    charParticles.current.forEach((charParticle: CharParticle, i: number) => {
-      const timeX =
-        animationTime.current * charParticle.speedX + charParticle.phaseX;
-      const timeY =
-        animationTime.current * charParticle.speedY + charParticle.phaseY;
-      charParticle.x =
-        charParticle.baseX +
-        Math.sin(timeX * Math.PI * 2) * charParticle.amplitudeX;
-      charParticle.y =
-        charParticle.baseY +
-        Math.sin(timeY * Math.PI * 2) * charParticle.amplitudeY;
+    const ctx = contextRef.current;
+    if (!ctx) return;
 
-      charParticle.rotation += charParticle.rotationSpeed * deltaTime;
+    ctx.clearRect(0, 0, canvasSizeRef.current.w, canvasSizeRef.current.h);
 
-      charParticle.baseX += charParticle.dx + vx;
-      charParticle.baseY += charParticle.dy + vy;
+    particlesRef.current.forEach((p, i) => {
+      // wave motion
+      const tx = animationTimeRef.current * p.speedX + p.phaseX;
+      const ty = animationTimeRef.current * p.speedY + p.phaseY;
+      p.x = p.baseX + Math.sin(tx * Math.PI * 2) * p.amplitudeX;
+      p.y = p.baseY + Math.sin(ty * Math.PI * 2) * p.amplitudeY;
 
-      const edge = [
-        charParticle.x + charParticle.translateX - charParticle.size,
-        canvasSize.current.w -
-          charParticle.x -
-          charParticle.translateX -
-          charParticle.size,
-        charParticle.y + charParticle.translateY - charParticle.size,
-        canvasSize.current.h -
-          charParticle.y -
-          charParticle.translateY -
-          charParticle.size,
+      p.rotation += p.rotationSpeed * delta;
+
+      p.baseX += p.dx + vx;
+      p.baseY += p.dy + vy;
+
+      // edge fade
+      const distances = [
+        p.x + p.translateX - p.size,
+        canvasSizeRef.current.w - p.x - p.translateX - p.size,
+        p.y + p.translateY - p.size,
+        canvasSizeRef.current.h - p.y - p.translateY - p.size,
       ];
-      const closestEdge = edge.reduce((a, b) => Math.min(a, b));
-      const remapClosestEdge = Number.parseFloat(
-        remapValue(closestEdge, 0, 20, 0, 1).toFixed(2),
-      );
+      const minDist = Math.min(...distances);
+      const fade = Math.max(0, Math.min(1, minDist / 20));
 
-      if (remapClosestEdge > 1) {
-        charParticle.alpha += 0.02;
-        if (charParticle.alpha > charParticle.targetAlpha) {
-          charParticle.alpha = charParticle.targetAlpha;
-        }
+      if (fade > 1) {
+        p.alpha = Math.min(p.targetAlpha, p.alpha + 0.02);
       } else {
-        charParticle.alpha = charParticle.targetAlpha * remapClosestEdge;
+        p.alpha = p.targetAlpha * fade;
       }
 
-      charParticle.translateX +=
-        (mouse.current.x / (staticity / charParticle.magnetism) -
-          charParticle.translateX) /
-        ease;
-      charParticle.translateY +=
-        (mouse.current.y / (staticity / charParticle.magnetism) -
-          charParticle.translateY) /
-        ease;
+      // mouse magnetism
+      p.translateX += (mouseRef.current.x / (staticity / p.magnetism) - p.translateX) / ease;
+      p.translateY += (mouseRef.current.y / (staticity / p.magnetism) - p.translateY) / ease;
 
-      drawCharParticle(charParticle, true);
+      drawParticle(p, true);
 
+      // recycle particles that drifted too far
       if (
-        charParticle.baseX < -charParticle.size - charParticle.amplitudeX ||
-        charParticle.baseX >
-          canvasSize.current.w + charParticle.size + charParticle.amplitudeX ||
-        charParticle.baseY < -charParticle.size - charParticle.amplitudeY ||
-        charParticle.baseY >
-          canvasSize.current.h + charParticle.size + charParticle.amplitudeY
+        p.baseX < -p.size - p.amplitudeX ||
+        p.baseX > canvasSizeRef.current.w + p.size + p.amplitudeX ||
+        p.baseY < -p.size - p.amplitudeY ||
+        p.baseY > canvasSizeRef.current.h + p.size + p.amplitudeY
       ) {
-        charParticles.current.splice(i, 1);
-        const newcharParticle = charParticleParams();
-        drawCharParticle(newcharParticle);
+        particlesRef.current.splice(i, 1);
+        const newP = createParticle();
+        drawParticle(newP);
       }
     });
-    window.requestAnimationFrame(animate);
+
+    rafRef.current = requestAnimationFrame(animate);
   };
 
-  const handleResize = () => {
-    if (canvasContainerRef.current) {
-      const newWidth = canvasContainerRef.current.offsetWidth;
-      if (Math.abs(newWidth - previousWidth.current) > 1) {
-        previousWidth.current = newWidth;
-        initCanvas();
-      } else {
-        resizeCanvasHeightOnly();
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    contextRef.current = canvas.getContext("2d");
+    if (!contextRef.current) return;
+
+    resize(); // initial setup
+
+    rafRef.current = requestAnimationFrame(animate); // start animation
+
+    const onResize = () => resize();
+    window.addEventListener("resize", onResize);
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const cx = rect.left + canvasSizeRef.current.w / 2;
+      const cy = rect.top + canvasSizeRef.current.h / 2;
+
+      const x = e.clientX - cx;
+      const y = e.clientY - cy;
+
+      if (Math.abs(x) < canvasSizeRef.current.w / 2 && Math.abs(y) < canvasSizeRef.current.h / 2) {
+        mouseRef.current = { x, y };
       }
+    };
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
+
+    // cleanup
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("mousemove", onMouseMove);
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [color, quantity, size, staticity, ease, vx, vy, characters]);
+
+  useEffect(() => {
+    if (refresh) {
+      regenerateParticles();
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refresh]);
 
   return (
     <div

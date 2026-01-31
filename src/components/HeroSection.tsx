@@ -43,20 +43,13 @@ export default function HeroSection() {
             VISUALIZE WITH <span className="matrix-text">CONFIDENCE</span>:
           </h1>
           <MatrixText
-            phrases={[
-              "SECURE DATA HANDLING",
-              "AFFORDABLE VISUALS",
-              "PRIVACY-FIRST ANALYTICS",
-            ]}
+            phrases={["SECURE DATA HANDLING", "AFFORDABLE VISUALS", "PRIVACY-FIRST ANALYTICS"]}
           />
         </motion.div>
-        <motion.p
-          className="px-6 pt-5 text-center sm:px-0 sm:text-start"
-          variants={itemVariants}
-        >
-          Build, share, and analyze visualizations without the risks —
-          engineered with your data's safety <br /> in mind, DVI makes analytics
-          infrastructure accessible to everyone.
+        <motion.p className="px-6 pt-5 text-center sm:px-0 sm:text-start" variants={itemVariants}>
+          Build, share, and analyze visualizations without the risks — engineered with your
+          data&apos;s safety <br /> in mind, DVI makes analytics infrastructure accessible to
+          everyone.
         </motion.p>
         <div className="flex justify-center gap-4 pt-5 sm:justify-start">
           {["Get Started", "View Showcase"].map((label, index) => (

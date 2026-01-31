@@ -65,9 +65,7 @@ export default function MockupTabs({ tabs = defaultTabs }: MockupTabsProps) {
             key={activeIndex}
             src={tabs[activeIndex].image}
             alt={`${tabs[activeIndex].label} mockup`}
-            className={`absolute object-cover ${
-              tabs[activeIndex].className ?? ""
-            }`}
+            className={`absolute object-cover ${tabs[activeIndex].className ?? ""}`}
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
