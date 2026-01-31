@@ -35,7 +35,7 @@ const getSignButtons = (style: string = "") =>
   ["SIGN IN", "SIGN UP"].map((label) => (
     <Button
       key={label}
-      className={`${style} sm:bg-primary/90 hover:bg-primary/80 tracking-tight transition-all`}
+      className={`${style} sm:bg-primary/90 hover:bg-primary/80 cursor-pointer tracking-tight transition-all`}
     >
       {label}
     </Button>

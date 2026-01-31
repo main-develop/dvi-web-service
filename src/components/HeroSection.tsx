@@ -69,7 +69,7 @@ export default function HeroSection() {
               <Button
                 className={cn(
                   "matrix-box-shadow bg-matrix/10 hover:bg-matrix/15 border-matrix text-primary",
-                  "border-1 uppercase transition-all",
+                  "cursor-pointer border-1 uppercase transition-all",
                 )}
               >
                 {label}
