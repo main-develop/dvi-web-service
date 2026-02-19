@@ -8,7 +8,7 @@ import { cn } from "@/src/lib/utils";
 interface TabConfig {
   label: string;
   image: string;
-  className?: string;
+  width?: string;
 }
 
 interface MockupTabsProps {
@@ -19,12 +19,12 @@ const defaultTabs: TabConfig[] = [
   {
     label: "Desktop",
     image: "/desktop-mockup.png",
-    className: "sm:w-[640px] w-[380px]",
+    width: "sm:w-[640px] w-[380px]",
   },
   {
     label: "Mobile",
     image: "/mobile-mockup.png",
-    className: "sm:w-[400px] w-[240px]",
+    width: "sm:w-[400px] w-[240px]",
   },
 ];
 
@@ -65,7 +65,7 @@ export default function MockupTabs({ tabs = defaultTabs }: MockupTabsProps) {
             key={activeIndex}
             src={tabs[activeIndex].image}
             alt={`${tabs[activeIndex].label} mockup`}
-            className={`absolute object-cover ${tabs[activeIndex].className ?? ""}`}
+            className={`absolute object-cover ${tabs[activeIndex].width ?? ""}`}
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
