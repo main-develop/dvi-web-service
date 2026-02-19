@@ -1,5 +1,6 @@
 import { CharParticlesBackground } from "../components/CharParticlesBackground";
 import HeroSection from "../components/HeroSection";
+import { OverviewSection } from "../components/OverviewSection";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
         color="#08CB00"
       />
       <HeroSection />
+      <OverviewSection />
     </>
   );
 }

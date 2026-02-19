@@ -160,3 +160,10 @@
 .matrix-box-shadow:hover {
   box-shadow: 0 1px 6px var(--color-matrix-50);
 }
+
+.radial-mask {
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  -webkit-mask-image: radial-gradient(ellipse at center,var(--background) 20%,transparent 100%),linear-gradient(to bottom,transparent,var(--background) 20%),linear-gradient(to bottom,var(--background) 90%,transparent);
+  mask-image: radial-gradient(ellipse at center,var(--background) 20%,transparent 100%),linear-gradient(to bottom,transparent,var(--background) 20%),linear-gradient(to bottom,var(--background) 90%,transparent); 
+}

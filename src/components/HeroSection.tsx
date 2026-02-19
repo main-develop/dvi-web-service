@@ -30,7 +30,7 @@ export default function HeroSection() {
   return (
     <div className="flex flex-col px-5 sm:flex-row sm:pr-0 sm:pl-22">
       <motion.div
-        className="flex h-screen flex-col justify-center sm:w-fit"
+        className="flex h-auto flex-col justify-center pt-40 sm:h-screen sm:w-fit sm:pt-0"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
@@ -79,7 +79,7 @@ export default function HeroSection() {
         </div>
       </motion.div>
       <motion.div
-        className="flex flex-1 items-center justify-center"
+        className="flex flex-1 items-center justify-center pt-50 sm:pt-0"
         initial={{ opacity: 0, filter: "blur(4px)", y: 15 }}
         animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
