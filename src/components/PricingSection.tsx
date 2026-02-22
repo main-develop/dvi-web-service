@@ -11,7 +11,7 @@ import { useState } from "react";
 import NumberFlow, { continuous } from "@number-flow/react";
 import { AnimatePresence, motion } from "motion/react";
 
-export interface PricingTier {
+interface PricingTierProps {
   id: string;
   name: string;
   description: string;
@@ -20,7 +20,7 @@ export interface PricingTier {
   cta: string;
 }
 
-export const tiers: PricingTier[] = [
+export const tiers: PricingTierProps[] = [
   {
     id: "basic",
     name: "Basic",
@@ -92,21 +92,30 @@ export const tiers: PricingTier[] = [
 
 const frequencies = ["monthly", "yearly"];
 
-export const PricingSection = () => {
+export const PricingSection = ({
+  backgroundGridSquares,
+}: {
+  backgroundGridSquares: number[][];
+}) => {
   const [selectedFrequency, setSelectedFrequency] = useState(frequencies[0]);
 
   return (
     <div className="relative flex px-5 pb-20 sm:flex-row sm:px-22">
-      <BackgroundGridPattern className="fade-bottom-mask" />
+      <div className="fade-bottom-mask absolute inset-0">
+        <BackgroundGridPattern squares={backgroundGridSquares} />
+      </div>
+
       <div className="relative flex w-full flex-col items-center justify-center gap-5">
         <div className="flex flex-col items-center justify-center gap-5 rounded-md">
           <h2 className="matrix-text text-3xl font-bold tracking-[0.04rem] uppercase sm:text-4xl">
             Choose your plan
           </h2>
+
           <p className="w-2xl text-center">
             Check out our Individual, Business, and Enterprise plans, available on a monthly and
             annual subscription basis. Choose the one that suits you best.
           </p>
+
           <div className="bg-background mx-auto flex w-fit rounded-md border-2 p-1">
             {frequencies.map((freq) => (
               <PricingTab
@@ -127,53 +136,51 @@ export const PricingSection = () => {
                 "bg-background text-foreground relative flex h-[410px] w-full flex-col gap-6 overflow-hidden border-2 p-6 sm:h-[480px] sm:w-70",
               )}
             >
-              <div>
-                <div className="flex flex-row justify-between">
-                  <h2 className="flex items-center gap-3 text-lg font-medium uppercase">
-                    {tier.name}
-                  </h2>
-                  <AnimatePresence mode="wait">
-                    {["pro", "business"].includes(tier.id) && selectedFrequency === "yearly" && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{
-                          duration: 0.5,
-                          ease: [0.4, 0, 0.2, 0.9],
-                        }}
-                      >
-                        <Badge className="bg-matrix text-secondary">
-                          {(() => {
-                            const monthlyTotal = (tier.price.monthly as number) * 12;
-                            const yearlyTotal = (tier.price.yearly as number) * 12;
-                            const discount = ((monthlyTotal - yearlyTotal) / monthlyTotal) * 100;
-                            return `${Math.round(discount)}% off`;
-                          })()}
-                        </Badge>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-                <h3 className="text-muted-foreground text-sm font-medium">{tier.description}</h3>
+              <div className="flex flex-row justify-between">
+                <h2 className="flex items-center gap-3 text-lg font-medium uppercase">
+                  {tier.name}
+                </h2>
+
+                <AnimatePresence mode="wait">
+                  {["pro", "business"].includes(tier.id) && selectedFrequency === "yearly" && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{
+                        duration: 0.5,
+                        ease: [0.4, 0, 0.2, 0.9],
+                      }}
+                    >
+                      <Badge className="bg-matrix text-secondary">
+                        {(() => {
+                          const monthlyTotal = (tier.price.monthly as number) * 12;
+                          const yearlyTotal = (tier.price.yearly as number) * 12;
+                          const discount = ((monthlyTotal - yearlyTotal) / monthlyTotal) * 100;
+                          return `${Math.round(discount)}% off`;
+                        })()}
+                      </Badge>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
+
+              <h3 className="text-muted-foreground text-sm font-medium">{tier.description}</h3>
 
               <div className="relative h-9">
                 {typeof tier.price[selectedFrequency] === "number" ? (
-                  <>
-                    <NumberFlow
-                      plugins={[continuous]}
-                      format={{
-                        style: "currency",
-                        currency: "USD",
-                        trailingZeroDisplay: "stripIfInteger",
-                      }}
-                      locales="en-US"
-                      value={tier.price[selectedFrequency]}
-                      className="text-2xl font-medium"
-                      suffix={`${tier.id === "business" ? " / user" : ""} / month`}
-                    />
-                  </>
+                  <NumberFlow
+                    plugins={[continuous]}
+                    format={{
+                      style: "currency",
+                      currency: "USD",
+                      trailingZeroDisplay: "stripIfInteger",
+                    }}
+                    locales="en-US"
+                    value={tier.price[selectedFrequency]}
+                    className="text-2xl font-medium"
+                    suffix={`${tier.id === "business" ? " / user" : ""} / month`}
+                  />
                 ) : (
                   <h1 className="text-2xl font-medium">{tier.price[selectedFrequency]}</h1>
                 )}

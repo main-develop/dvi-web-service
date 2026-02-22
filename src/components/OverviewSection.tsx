@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import { useRef, useState } from "react";
 import { useMotionValueEvent, useScroll } from "motion/react";
 import { motion } from "motion/react";
 import { BackgroundGridPattern } from "./ui/background-grid-pattern";
@@ -39,8 +39,12 @@ const content = [
   },
 ];
 
-export const OverviewSection = () => {
-  const [activeCard, setActiveCard] = React.useState(0);
+export const OverviewSection = ({
+  backgroundGridSquares,
+}: {
+  backgroundGridSquares: number[][];
+}) => {
+  const [activeCard, setActiveCard] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
 
   // Track page scroll relative to this component's position
@@ -75,7 +79,10 @@ export const OverviewSection = () => {
           "px-5 sm:flex-row sm:items-center sm:justify-between sm:px-22",
         )}
       >
-        <BackgroundGridPattern className="fade-top-mask" />
+        <div className="fade-top-mask absolute inset-0 size-full">
+          <BackgroundGridPattern squares={backgroundGridSquares} />
+        </div>
+
         <div
           className={cn(
             "relative flex h-[50%] w-full items-end",
@@ -102,10 +109,12 @@ export const OverviewSection = () => {
               <h2 className="matrix-text text-3xl font-bold tracking-[0.04rem] sm:text-4xl">
                 {item.title}
               </h2>
+
               <p className="mt-4">{item.description}</p>
             </motion.div>
           ))}
         </div>
+
         <div
           className={cn(
             "flex h-[50%] w-full shrink-0 items-start justify-center",
