@@ -5,6 +5,7 @@ import { useMotionValueEvent, useScroll } from "motion/react";
 import { motion } from "motion/react";
 import { BackgroundGridPattern } from "./ui/background-grid-pattern";
 import { cn } from "../lib/utils";
+import { getItemAnimate, getItemInitial } from "../lib/motion-variants";
 
 const content = [
   {
@@ -129,8 +130,8 @@ export const OverviewSection = ({
               "sm:max-h-none sm:w-[750px] sm:max-w-none sm:object-cover",
             )}
             alt="linear board demo"
-            initial={{ opacity: 0, filter: "blur(6px)", y: 30 }}
-            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+            initial={getItemInitial(0, 6, 30)}
+            animate={getItemAnimate()}
             exit={{ opacity: 0, filter: "blur(4px)", y: -15 }}
             transition={{
               duration: 1,

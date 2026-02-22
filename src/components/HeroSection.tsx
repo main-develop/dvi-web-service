@@ -1,32 +1,16 @@
 "use client";
 
-import { motion, Variants } from "motion/react";
+import { motion } from "motion/react";
 import { Button } from "./ui/button";
 import { MatrixText } from "./ui/matrix-text";
 import MockupTabs from "./ui/mockup-tabs";
 import { cn } from "../lib/utils";
-
-const containerVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, filter: "blur(4px)", y: 15 },
-  visible: {
-    opacity: 1,
-    filter: "blur(0px)",
-    y: 0,
-    transition: { duration: 0.6 },
-  },
-};
+import * as motions from "../lib/motion-variants";
 
 export default function HeroSection() {
+  const containerVariants = motions.getContainerVariants();
+  const itemVariants = motions.getItemVariants();
+
   return (
     <div className="flex flex-col px-5 sm:flex-row sm:pr-0 sm:pl-22">
       <motion.div
@@ -56,15 +40,9 @@ export default function HeroSection() {
             <motion.div
               className="backdrop-blur-xs"
               key={label}
-              initial={{ opacity: 0, filter: "blur(4px)", y: 15 }}
-              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-              transition={{
-                delay: 0.6 + index * 0.15,
-                duration: 0.6,
-                type: "spring",
-                stiffness: 100,
-                damping: 10,
-              }}
+              initial={motions.getItemInitial()}
+              animate={motions.getItemAnimate()}
+              transition={motions.getItemTransition(index)}
             >
               <Button
                 className={cn(
@@ -80,8 +58,8 @@ export default function HeroSection() {
       </motion.div>
       <motion.div
         className="flex flex-1 items-center justify-center pt-50 sm:pt-0"
-        initial={{ opacity: 0, filter: "blur(4px)", y: 15 }}
-        animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+        initial={motions.getItemInitial()}
+        animate={motions.getItemAnimate()}
         transition={{ delay: 0.5, duration: 0.5 }}
       >
         <MockupTabs />

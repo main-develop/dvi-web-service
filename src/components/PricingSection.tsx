@@ -10,6 +10,7 @@ import { PricingTab } from "./ui/pricing-tabs";
 import { useState } from "react";
 import NumberFlow, { continuous } from "@number-flow/react";
 import { AnimatePresence, motion } from "motion/react";
+import * as motions from "../lib/motion-variants";
 
 interface PricingTierProps {
   id: string;
@@ -97,6 +98,8 @@ export const PricingSection = ({
 }: {
   backgroundGridSquares: number[][];
 }) => {
+  const containerVariants = motions.getContainerVariants();
+  const itemVariants = motions.getItemVariants(20);
   const [selectedFrequency, setSelectedFrequency] = useState(frequencies[0]);
 
   return (
@@ -105,18 +108,30 @@ export const PricingSection = ({
         <BackgroundGridPattern squares={backgroundGridSquares} />
       </div>
 
-      <div className="relative flex w-full flex-col items-center justify-center gap-5">
+      <motion.div
+        className="relative flex w-full flex-col items-center justify-center gap-5"
+        initial="hidden"
+        whileInView="visible"
+        variants={containerVariants}
+        viewport={{ once: true }}
+      >
         <div className="flex flex-col items-center justify-center gap-5 rounded-md">
-          <h2 className="matrix-text text-3xl font-bold tracking-[0.04rem] uppercase sm:text-4xl">
+          <motion.h2
+            className="matrix-text text-3xl font-bold tracking-[0.04rem] uppercase sm:text-4xl"
+            variants={itemVariants}
+          >
             Choose your plan
-          </h2>
+          </motion.h2>
 
-          <p className="w-2xl text-center">
+          <motion.p variants={itemVariants} className="w-2xl text-center">
             Check out our Individual, Business, and Enterprise plans, available on a monthly and
             annual subscription basis. Choose the one that suits you best.
-          </p>
+          </motion.p>
 
-          <div className="bg-background mx-auto flex w-fit rounded-md border-2 p-1">
+          <motion.div
+            variants={itemVariants}
+            className="bg-background mx-auto flex w-fit rounded-md border-2 p-1"
+          >
             {frequencies.map((freq) => (
               <PricingTab
                 key={freq}
@@ -125,92 +140,100 @@ export const PricingSection = ({
                 setSelected={setSelectedFrequency}
               />
             ))}
-          </div>
+          </motion.div>
         </div>
 
         <div className="flex w-full flex-col items-center justify-center gap-6 sm:flex-row">
-          {tiers.map((tier) => (
-            <Card
+          {tiers.map((tier, index) => (
+            <motion.div
               key={tier.id}
-              className={cn(
-                "bg-background text-foreground relative flex h-[410px] w-full flex-col gap-6 overflow-hidden border-2 p-6 sm:h-[480px] sm:w-70",
-              )}
+              initial={motions.getItemInitial()}
+              whileInView={motions.getItemAnimate()}
+              transition={motions.getItemTransition(index)}
+              viewport={{ once: true }}
             >
-              <div className="flex flex-row justify-between">
-                <h2 className="flex items-center gap-3 text-lg font-medium uppercase">
-                  {tier.name}
-                </h2>
-
-                <AnimatePresence mode="wait">
-                  {["pro", "business"].includes(tier.id) && selectedFrequency === "yearly" && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{
-                        duration: 0.5,
-                        ease: [0.4, 0, 0.2, 0.9],
-                      }}
-                    >
-                      <Badge className="bg-matrix text-secondary">
-                        {(() => {
-                          const monthlyTotal = (tier.price.monthly as number) * 12;
-                          const yearlyTotal = (tier.price.yearly as number) * 12;
-                          const discount = ((monthlyTotal - yearlyTotal) / monthlyTotal) * 100;
-                          return `${Math.round(discount)}% off`;
-                        })()}
-                      </Badge>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              <h3 className="text-muted-foreground text-sm font-medium">{tier.description}</h3>
-
-              <div className="relative h-9">
-                {typeof tier.price[selectedFrequency] === "number" ? (
-                  <NumberFlow
-                    plugins={[continuous]}
-                    format={{
-                      style: "currency",
-                      currency: "USD",
-                      trailingZeroDisplay: "stripIfInteger",
-                    }}
-                    locales="en-US"
-                    value={tier.price[selectedFrequency]}
-                    className="text-2xl font-medium"
-                    suffix={`${tier.id === "business" ? " / user" : ""} / month`}
-                  />
-                ) : (
-                  <h1 className="text-2xl font-medium">{tier.price[selectedFrequency]}</h1>
+              <Card
+                key={tier.id}
+                className={cn(
+                  "bg-background text-foreground relative flex h-[410px] w-full flex-col gap-6 overflow-hidden border-2 p-6 sm:h-[480px] sm:w-70",
                 )}
-              </div>
+              >
+                <div className="flex flex-row justify-between">
+                  <h2 className="flex items-center gap-3 text-lg font-medium uppercase">
+                    {tier.name}
+                  </h2>
 
-              <div className="border-t-muted-foreground border-1"></div>
+                  <AnimatePresence mode="wait">
+                    {["pro", "business"].includes(tier.id) && selectedFrequency === "yearly" && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{
+                          duration: 0.5,
+                          ease: [0.4, 0, 0.2, 0.9],
+                        }}
+                      >
+                        <Badge className="bg-matrix text-secondary">
+                          {(() => {
+                            const monthlyTotal = (tier.price.monthly as number) * 12;
+                            const yearlyTotal = (tier.price.yearly as number) * 12;
+                            const discount = ((monthlyTotal - yearlyTotal) / monthlyTotal) * 100;
+                            return `${Math.round(discount)}% off`;
+                          })()}
+                        </Badge>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
 
-              <div className="flex-1 space-y-2">
-                <ul className="space-y-2">
-                  {tier.features.map((feature, index) => (
-                    <li
-                      key={index}
-                      className={cn(
-                        "text-muted-foreground flex items-start gap-2 text-sm font-medium",
-                      )}
-                    >
-                      <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                <h3 className="text-muted-foreground text-sm font-medium">{tier.description}</h3>
 
-              <Button className="sm:bg-primary/90 hover:bg-primary/80 cursor-pointer tracking-tight transition-all">
-                {tier.cta}
-              </Button>
-            </Card>
+                <div className="relative h-9">
+                  {typeof tier.price[selectedFrequency] === "number" ? (
+                    <NumberFlow
+                      plugins={[continuous]}
+                      format={{
+                        style: "currency",
+                        currency: "USD",
+                        trailingZeroDisplay: "stripIfInteger",
+                      }}
+                      locales="en-US"
+                      value={tier.price[selectedFrequency]}
+                      className="text-2xl font-medium"
+                      suffix={`${tier.id === "business" ? " / user" : ""} / month`}
+                    />
+                  ) : (
+                    <h1 className="text-2xl font-medium">{tier.price[selectedFrequency]}</h1>
+                  )}
+                </div>
+
+                <div className="border-t-muted-foreground border-1"></div>
+
+                <div className="flex-1 space-y-2">
+                  <ul className="space-y-2">
+                    {tier.features.map((feature, index) => (
+                      <li
+                        key={index}
+                        className={cn(
+                          "text-muted-foreground flex items-start gap-2 text-sm font-medium",
+                        )}
+                      >
+                        <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <Button className="sm:bg-primary/90 hover:bg-primary/80 cursor-pointer tracking-tight transition-all">
+                  {tier.cta}
+                </Button>
+              </Card>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
