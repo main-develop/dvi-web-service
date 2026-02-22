@@ -75,7 +75,7 @@ export const OverviewSection = () => {
           "px-5 sm:flex-row sm:items-center sm:justify-between sm:px-22",
         )}
       >
-        <BackgroundGridPattern />
+        <BackgroundGridPattern className="fade-top-mask" />
         <div
           className={cn(
             "relative flex h-[50%] w-full items-end",

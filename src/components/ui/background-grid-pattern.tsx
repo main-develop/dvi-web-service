@@ -15,7 +15,7 @@ const BackgroundGridPattern = ({
 }: BackgroundGridPatternProps) => {
   return (
     <div
-      className={cn("radial-mask absolute inset-0 z-[-10] size-full", className)}
+      className={cn("absolute inset-0 z-[-10] size-full", className)}
       style={{
         backgroundImage: `linear-gradient(to right, ${fill} 1px, transparent 1px), 
         linear-gradient(to bottom, ${fill} 1px, transparent 1px)`,

@@ -1,6 +1,7 @@
 import { CharParticlesBackground } from "../components/CharParticlesBackground";
 import HeroSection from "../components/HeroSection";
 import { OverviewSection } from "../components/OverviewSection";
+import { PricingSection } from "../components/PricingSection";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       />
       <HeroSection />
       <OverviewSection />
+      <PricingSection />
     </>
   );
 }
