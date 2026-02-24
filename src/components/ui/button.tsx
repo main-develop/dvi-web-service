@@ -8,7 +8,7 @@ const buttonVariants = cva(
   cn(
     "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-[0.813rem] font-medium",
     "transition-all outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none",
-    "[&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 aria-invalid:border-destructive",
+    "uppercase [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 aria-invalid:border-destructive",
     "select-none transition-colors active:scale-[0.93] transition-transform duration-150 ease-in-out",
   ),
   {

@@ -161,9 +161,22 @@
   box-shadow: 0 1px 6px var(--color-matrix-50);
 }
 
-.radial-mask {
+.fade-top-mask {
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
-  -webkit-mask-image: radial-gradient(ellipse at center,var(--background) 20%,transparent 100%),linear-gradient(to bottom,transparent,var(--background) 20%),linear-gradient(to bottom,var(--background) 90%,transparent);
-  mask-image: radial-gradient(ellipse at center,var(--background) 20%,transparent 100%),linear-gradient(to bottom,transparent,var(--background) 20%),linear-gradient(to bottom,var(--background) 90%,transparent); 
+  -webkit-mask-image: linear-gradient(to bottom,transparent,var(--background) 40%),radial-gradient(ellipse at 50% 100%,var(--background) 50%,transparent);
+  mask-image: linear-gradient(to bottom,transparent,var(--background) 40%),radial-gradient(ellipse at 50% 100%,var(--background) 50%,transparent);
+}
+
+.fade-bottom-mask {
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  -webkit-mask-image: linear-gradient(to top,transparent,var(--background) 40%),radial-gradient(ellipse at 50% 0%,var(--background) 50%,transparent);
+  mask-image: linear-gradient(to top,transparent,var(--background) 40%),radial-gradient(ellipse at 50% 0%,var(--background) 50%,transparent);
+}
+
+number-flow-react::part(suffix) {
+	line-height: var(--tw-leading, var(--text-base--line-height));
+	font-size: var(--text-base);
+	color: var(--muted-foreground);
 }

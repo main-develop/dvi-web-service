@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useRef } from "react";
+import { useRef, useState } from "react";
 import { useMotionValueEvent, useScroll } from "motion/react";
 import { motion } from "motion/react";
 import { BackgroundGridPattern } from "./ui/background-grid-pattern";
 import { cn } from "../lib/utils";
+import { getItemAnimate, getItemInitial } from "../lib/motion-variants";
 
 const content = [
   {
@@ -39,8 +40,12 @@ const content = [
   },
 ];
 
-export const OverviewSection = () => {
-  const [activeCard, setActiveCard] = React.useState(0);
+export const OverviewSection = ({
+  backgroundGridSquares,
+}: {
+  backgroundGridSquares: number[][];
+}) => {
+  const [activeCard, setActiveCard] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
 
   // Track page scroll relative to this component's position
@@ -75,7 +80,10 @@ export const OverviewSection = () => {
           "px-5 sm:flex-row sm:items-center sm:justify-between sm:px-22",
         )}
       >
-        <BackgroundGridPattern />
+        <div className="fade-top-mask absolute inset-0 size-full">
+          <BackgroundGridPattern squares={backgroundGridSquares} />
+        </div>
+
         <div
           className={cn(
             "relative flex h-[50%] w-full items-end",
@@ -102,10 +110,12 @@ export const OverviewSection = () => {
               <h2 className="matrix-text text-3xl font-bold tracking-[0.04rem] sm:text-4xl">
                 {item.title}
               </h2>
+
               <p className="mt-4">{item.description}</p>
             </motion.div>
           ))}
         </div>
+
         <div
           className={cn(
             "flex h-[50%] w-full shrink-0 items-start justify-center",
@@ -120,8 +130,8 @@ export const OverviewSection = () => {
               "sm:max-h-none sm:w-[750px] sm:max-w-none sm:object-cover",
             )}
             alt="linear board demo"
-            initial={{ opacity: 0, filter: "blur(6px)", y: 30 }}
-            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+            initial={getItemInitial(0, 6, 30)}
+            animate={getItemAnimate()}
             exit={{ opacity: 0, filter: "blur(4px)", y: -15 }}
             transition={{
               duration: 1,
