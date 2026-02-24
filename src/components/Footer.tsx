@@ -1,8 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
-import { cn } from "../lib/utils";
+import { getNavLinks } from "../utils/get-nav-links";
 
 const socials = [
   {
@@ -44,24 +43,10 @@ const socials = [
 ];
 
 const navLinks = [
-  {href: "/contact", title: "Contact"},
-  {href: "/privacy-policy", title: "Privacy Policy"},
-  {href: "/careers", title: "Careers"},
+  { href: "/contact", title: "Contact" },
+  { href: "/privacy-policy", title: "Privacy Policy" },
+  { href: "/careers", title: "Careers" },
 ];
-
-const getNavLinks = (style: string = "") => 
-  navLinks.map((link) => (
-    <Link
-      key={link.title}
-      href={link.href}
-      className={cn(
-        "text-primary-foreground hover:text-primary/90 tracking-[0.04rem] uppercase transition",
-        style,
-      )}
-    >
-      {link.title}
-    </Link>
-  ))
 
 export default function Footer() {
   return (
@@ -89,7 +74,7 @@ export default function Footer() {
         </ul>
 
         <ul className="order-first flex flex-row gap-5 sm:order-none">
-          {getNavLinks("text-[0.813rem] cursor-pointer")}
+          {getNavLinks(navLinks, "text-[0.813rem] cursor-pointer")}
         </ul>
 
         <p className="text-primary-foreground text-center text-[0.813rem]">&copy; 2026 DVI</p>

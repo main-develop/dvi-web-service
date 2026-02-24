@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Button } from "./ui/button";
 import { Logo } from "./ui/logo";
 import { AnimatePresence, motion } from "motion/react";
@@ -8,28 +7,15 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "../lib/utils";
 import { createPortal } from "react-dom";
+import { getNavLinks } from "../utils/get-nav-links";
 
 const navLinks = [
-  { href: "/about", name: "ABOUT" },
-  { href: "/pricing", name: "PRICING" },
-  { href: "/changelog", name: "CHANGELOG" },
-  { href: "/company", name: "COMPANY" },
-  { href: "/help", name: "HELP" },
+  { href: "/about", title: "ABOUT" },
+  { href: "/pricing", title: "PRICING" },
+  { href: "/changelog", title: "CHANGELOG" },
+  { href: "/company", title: "COMPANY" },
+  { href: "/help", title: "HELP" },
 ];
-
-const getNavLinks = (style: string = "") =>
-  navLinks.map((link) => (
-    <Link
-      key={link.name}
-      href={link.href}
-      className={cn(
-        style,
-        "text-primary-foreground hover:text-primary/90 font-semibold tracking-[0.04rem] transition",
-      )}
-    >
-      {link.name}
-    </Link>
-  ));
 
 const getSignButtons = (style: string = "") =>
   ["SIGN IN", "SIGN UP"].map((label) => (
@@ -97,7 +83,7 @@ export default function Header() {
         </div>
         <div className="hidden flex-1 md:flex">
           <ul className="flex flex-1 items-center justify-center gap-7 px-6">
-            {getNavLinks("text-sm")}
+            {getNavLinks(navLinks, "text-sm font-semibold")}
           </ul>
           <div className="flex justify-end gap-2">{getSignButtons()}</div>
         </div>
@@ -149,7 +135,9 @@ export default function Header() {
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
-                  <ul className="flex flex-col items-start gap-y-4">{getNavLinks("text-lg")}</ul>
+                  <ul className="flex flex-col items-start gap-y-4">
+                    {getNavLinks(navLinks, "text-lg font-semibold")}
+                  </ul>
                   <div className="flex flex-col gap-2 pt-8">{getSignButtons("h-10")}</div>
                 </motion.div>
               )}
