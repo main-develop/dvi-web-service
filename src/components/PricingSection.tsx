@@ -11,6 +11,7 @@ import { useState } from "react";
 import NumberFlow, { continuous } from "@number-flow/react";
 import { AnimatePresence, motion } from "motion/react";
 import * as motions from "../lib/motion-variants";
+import { GlowingBorderEffect } from "./ui/glowing-border-effect";
 
 interface PricingTierProps {
   id: string;
@@ -109,7 +110,7 @@ export const PricingSection = ({
       </div>
 
       <motion.div
-        className="relative flex w-full flex-col items-center justify-center gap-5"
+        className="relative flex w-full flex-col items-center justify-center gap-4"
         initial="hidden"
         whileInView="visible"
         variants={containerVariants}
@@ -123,15 +124,17 @@ export const PricingSection = ({
             Choose your plan
           </motion.h2>
 
-          <motion.p variants={itemVariants} className="w-2xl text-center">
+          <motion.p variants={itemVariants} className="sm:w-2xl text-center">
             Check out our Individual, Business, and Enterprise plans, available on a monthly and
             annual subscription basis. Choose the one that suits you best.
           </motion.p>
 
           <motion.div
             variants={itemVariants}
-            className="bg-background mx-auto flex w-fit rounded-md border-2 p-1"
+            className="bg-background border-muted mx-auto flex w-fit rounded-md border-2 p-1"
           >
+            <GlowingBorderEffect className="hidden sm:block" />
+
             {frequencies.map((freq) => (
               <PricingTab
                 key={freq}
@@ -151,13 +154,15 @@ export const PricingSection = ({
               whileInView={motions.getItemAnimate()}
               transition={motions.getItemTransition(index)}
               viewport={{ once: true }}
+              className="w-full sm:w-auto"
             >
               <Card
-                key={tier.id}
                 className={cn(
-                  "bg-background text-foreground relative flex h-[410px] w-full flex-col gap-6 overflow-hidden border-2 p-6 sm:h-[480px] sm:w-70",
+                  "bg-background text-foreground border-muted relative flex h-auto w-auto flex-col gap-6 border-2 p-6 sm:h-[480px] sm:w-70",
                 )}
               >
+                <GlowingBorderEffect className="hidden sm:block" />
+
                 <div className="flex flex-row justify-between">
                   <h2 className="flex items-center gap-3 text-lg font-medium uppercase">
                     {tier.name}
@@ -208,7 +213,7 @@ export const PricingSection = ({
                   )}
                 </div>
 
-                <div className="border-t-muted-foreground border-1"></div>
+                <div className="border-t-muted border-1"></div>
 
                 <div className="flex-1 space-y-2">
                   <ul className="space-y-2">
