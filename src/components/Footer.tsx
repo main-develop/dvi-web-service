@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "motion/react";
 import Link from "next/link";
 import { cn } from "../lib/utils";
 
@@ -64,8 +65,12 @@ const getNavLinks = (style: string = "") =>
 
 export default function Footer() {
   return (
-    <footer
+    <motion.footer
       className="mt-auto mb-4 px-7 py-3"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+      viewport={{ once: true }}
     >
       <div className="flex flex-col items-center gap-5 sm:flex-row sm:justify-between sm:gap-0">
         <ul className="flex flex-row items-center gap-5 sm:gap-3">
@@ -89,6 +94,6 @@ export default function Footer() {
 
         <p className="text-primary-foreground text-center text-[0.813rem]">&copy; 2026 DVI</p>
       </div>
-    </footer>
+    </motion.footer>
   );
 }
