@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import { MatrixText } from "./ui/matrix-text";
 import MockupTabs from "./ui/mockup-tabs";
 import { cn } from "../lib/utils";
-import * as motions from "../lib/motion-variants";
+import * as motions from "../utils/motion-variants";
 
 export default function HeroSection() {
   const containerVariants = motions.getContainerVariants();

@@ -10,7 +10,7 @@ import { PricingTab } from "./ui/pricing-tabs";
 import { useState } from "react";
 import NumberFlow, { continuous } from "@number-flow/react";
 import { AnimatePresence, motion } from "motion/react";
-import * as motions from "../lib/motion-variants";
+import * as motions from "../utils/motion-variants";
 import { GlowingBorderEffect } from "./ui/glowing-border-effect";
 
 interface PricingTierProps {

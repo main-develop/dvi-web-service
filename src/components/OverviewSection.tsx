@@ -5,7 +5,7 @@ import { useMotionValueEvent, useScroll } from "motion/react";
 import { motion } from "motion/react";
 import { BackgroundGridPattern } from "./ui/background-grid-pattern";
 import { cn } from "../lib/utils";
-import { getItemAnimate, getItemInitial } from "../lib/motion-variants";
+import { getItemAnimate, getItemInitial } from "../utils/motion-variants";
 
 const content = [
   {
