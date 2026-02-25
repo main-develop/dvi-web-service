@@ -6,10 +6,10 @@ import { cn } from "@/src/lib/utils";
 
 const buttonVariants = cva(
   cn(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-[0.813rem] font-medium",
-    "transition-all outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none",
-    "uppercase [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 aria-invalid:border-destructive",
-    "select-none transition-colors active:scale-[0.93] transition-transform duration-150 ease-in-out",
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-[0.813rem]",
+    "font-medium transition-all outline-none disabled:pointer-events-none disabled:opacity-50",
+    "[&_svg]:pointer-events-none uppercase [&_svg:not([class*='size-'])]:size-4 shrink-0",
+    "[&_svg]:shrink-0 aria-invalid:border-destructive select-none cursor-pointer",
   ),
   {
     variants: {
@@ -35,10 +35,15 @@ const buttonVariants = cva(
         "icon-sm": "size-8",
         "icon-lg": "size-10",
       },
+      effect: {
+        none: "",
+        scale: "active:scale-[0.93] transition-transform duration-150 ease-in-out",
+      }
     },
     defaultVariants: {
       variant: "default",
       size: "default",
+      effect: "scale",
     },
   },
 );
@@ -47,6 +52,7 @@ function Button({
   className,
   variant = "default",
   size = "default",
+  effect = "scale",
   asChild = false,
   ...props
 }: React.ComponentProps<"button"> &
@@ -60,7 +66,7 @@ function Button({
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, effect, className }))}
       {...props}
     />
   );

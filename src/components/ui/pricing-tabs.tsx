@@ -14,9 +14,10 @@ export function PricingTab({ text, selected, setSelected }: PricingTabProps) {
   return (
     <Button
       onClick={() => setSelected(text)}
+      effect="none"
       className={cn(
         "relative w-fit px-4 py-1.5 text-xs font-semibold",
-        "bg-transparent transition-colors hover:bg-transparent",
+        "bg-transparent hover:bg-transparent",
       )}
     >
       <span

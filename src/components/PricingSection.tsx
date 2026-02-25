@@ -124,7 +124,7 @@ export const PricingSection = ({
             Choose your plan
           </motion.h2>
 
-          <motion.p variants={itemVariants} className="sm:w-2xl text-center">
+          <motion.p variants={itemVariants} className="text-center sm:w-2xl">
             Check out our Individual, Business, and Enterprise plans, available on a monthly and
             annual subscription basis. Choose the one that suits you best.
           </motion.p>
@@ -158,7 +158,8 @@ export const PricingSection = ({
             >
               <Card
                 className={cn(
-                  "bg-background text-foreground border-muted relative flex h-auto w-auto flex-col gap-6 border-2 p-6 sm:h-[480px] sm:w-70",
+                  "bg-background text-foreground border-muted relative flex h-auto w-auto",
+                  "flex-col gap-6 border-2 p-6 sm:h-[480px] sm:w-70",
                 )}
               >
                 <GlowingBorderEffect className="hidden sm:block" />
@@ -231,7 +232,12 @@ export const PricingSection = ({
                   </ul>
                 </div>
 
-                <Button className="sm:bg-primary/90 hover:bg-primary/80 cursor-pointer tracking-tight transition-all">
+                <Button
+                  className={cn(
+                    "sm:bg-primary/90 hover:bg-primary/80",
+                    "cursor-pointer tracking-tight transition-all",
+                  )}
+                >
                   {tier.cta}
                 </Button>
               </Card>
