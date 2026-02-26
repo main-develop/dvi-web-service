@@ -17,9 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={ddin.variable}>
-      <body className="dark antialiased">
+      <body className="dark antialiased flex min-h-screen flex-col">
         <Header />
-        <main className="flex-1">
+        <main className="flex-1 flex flex-col">
           <SmoothScrollProvider>{children}</SmoothScrollProvider>
         </main>
         <Footer />

@@ -164,15 +164,32 @@
 .fade-top-mask {
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
-  -webkit-mask-image: linear-gradient(to bottom,transparent,var(--background) 40%),radial-gradient(ellipse at 50% 100%,var(--background) 50%,transparent);
-  mask-image: linear-gradient(to bottom,transparent,var(--background) 40%),radial-gradient(ellipse at 50% 100%,var(--background) 50%,transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, var(--background) 40%),
+    radial-gradient(ellipse at 50% 100%, var(--background) 50%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, var(--background) 40%),
+    radial-gradient(ellipse at 50% 100%, var(--background) 50%, transparent);
 }
 
 .fade-bottom-mask {
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
-  -webkit-mask-image: linear-gradient(to top,transparent,var(--background) 40%),radial-gradient(ellipse at 50% 0%,var(--background) 50%,transparent);
-  mask-image: linear-gradient(to top,transparent,var(--background) 40%),radial-gradient(ellipse at 50% 0%,var(--background) 50%,transparent);
+  -webkit-mask-image: linear-gradient(to top, transparent, var(--background) 40%),
+    radial-gradient(ellipse at 50% 0%, var(--background) 50%, transparent);
+  mask-image: linear-gradient(to top, transparent, var(--background) 40%),
+    radial-gradient(ellipse at 50% 0%, var(--background) 50%, transparent);
+}
+
+.fade-all-mask {
+  -webkit-mask-composite: source-in, source-in, source-in;
+  mask-composite: intersect, intersect, intersect;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, var(--background) 40%),
+    linear-gradient(to top, transparent, var(--background) 40%),
+    radial-gradient(ellipse at 50% 100%, var(--background) 50%, transparent),
+    radial-gradient(ellipse at 50% 0%, var(--background) 50%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, var(--background) 40%),
+    linear-gradient(to top, transparent, var(--background) 40%),
+    radial-gradient(ellipse at 50% 100%, var(--background) 50%, transparent),
+    radial-gradient(ellipse at 50% 0%, var(--background) 50%, transparent);
 }
 
 number-flow-react::part(suffix) {
