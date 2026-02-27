@@ -1,8 +1,8 @@
-import { CharParticlesBackground } from "../components/CharParticlesBackground";
-import HeroSection from "../components/HeroSection";
-import { OverviewSection } from "../components/OverviewSection";
-import { PricingSection } from "../components/PricingSection";
-import { generateRandomPattern } from "../components/ui/background-grid-pattern";
+import { CharParticlesBackground } from "../../components/CharParticlesBackground";
+import HeroSection from "../../components/HeroSection";
+import { OverviewSection } from "../../components/OverviewSection";
+import { PricingSection } from "../../components/PricingSection";
+import { generateRandomPattern } from "../../components/ui/background-grid-pattern";
 
 export default function Home() {
   const backgroundGridSquares = generateRandomPattern();
