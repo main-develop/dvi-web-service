@@ -116,6 +116,11 @@
   ::-webkit-scrollbar-thumb:hover {
     background: var(--foreground);
   }
+
+  ::selection {
+    color: var(--color-matrix);
+    background-color: color-mix(in oklab, var(--color-matrix) 20%, transparent);
+  }
 }
 
 .dark {

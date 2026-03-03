@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "./ui/button";
-import { Logo } from "./ui/logo";
+import { Button } from "../ui/button";
+import { Logo } from "../ui/logo";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { cn } from "../lib/utils";
+import { cn } from "@/src/lib/utils";
 import { createPortal } from "react-dom";
-import { getNavLinks } from "../utils/get-nav-links";
+import { getNavLinks } from "@/src/utils/get-nav-links";
 
 const navLinks = [
   { href: "/about", title: "ABOUT" },
@@ -19,10 +19,7 @@ const navLinks = [
 
 const getSignButtons = (style: string = "") =>
   ["SIGN IN", "SIGN UP"].map((label) => (
-    <Button
-      key={label}
-      className={`${style} sm:bg-primary/90 hover:bg-primary/80 tracking-tight`}
-    >
+    <Button key={label} className={`${style} sm:bg-primary/90 hover:bg-primary/80 tracking-tight`}>
       {label}
     </Button>
   ));
@@ -78,45 +75,49 @@ export default function Header() {
         : {})}
     >
       <nav className="mx-auto flex max-w-full items-center">
-        <div className="flex items-center justify-start">
+        <div className="flex h-[34px] items-center justify-start">
           <Logo />
         </div>
-        <div className="hidden flex-1 md:flex">
-          <ul className="flex flex-1 items-center justify-center gap-7 px-6">
-            {getNavLinks(navLinks, "text-sm font-semibold")}
-          </ul>
-          <div className="flex justify-end gap-2">{getSignButtons()}</div>
-        </div>
-        <div className="flex flex-1 items-center justify-end md:hidden">
-          <Button
-            className="group scale-170"
-            variant="ghost"
-            onClick={() => setIsMobileMenuOpen((prevState) => !prevState)}
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-menu"
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-          >
-            <svg
-              width={16}
-              height={16}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {svgPathStyle.map((style, index) => (
-                <path
-                  key={`path-${index}`}
-                  d="M4 12L20 12"
-                  className={`origin-center transition-all duration-300 ${style}`}
-                />
-              ))}
-            </svg>
-          </Button>
-        </div>
+        {isHome && (
+          <>
+            <div className="hidden flex-1 md:flex">
+              <ul className="flex flex-1 items-center justify-center gap-7 px-6">
+                {getNavLinks(navLinks, "text-sm font-semibold")}
+              </ul>
+              <div className="flex justify-end gap-2">{getSignButtons()}</div>
+            </div>
+            <div className="flex flex-1 items-center justify-end md:hidden">
+              <Button
+                className="group scale-170"
+                variant="ghost"
+                onClick={() => setIsMobileMenuOpen((prevState) => !prevState)}
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-menu"
+                aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              >
+                <svg
+                  width={16}
+                  height={16}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {svgPathStyle.map((style, index) => (
+                    <path
+                      key={`path-${index}`}
+                      d="M4 12L20 12"
+                      className={`origin-center transition-all duration-300 ${style}`}
+                    />
+                  ))}
+                </svg>
+              </Button>
+            </div>
+          </>
+        )}
       </nav>
       {typeof window === "undefined"
         ? null

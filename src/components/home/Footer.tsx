@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { getNavLinks } from "../utils/get-nav-links";
+import { getNavLinks } from "@/src/utils/get-nav-links";
 
 const socials = [
   {

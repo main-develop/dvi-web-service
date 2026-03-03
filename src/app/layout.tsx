@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ddin from "./fonts";
-import { SmoothScrollProvider } from "../components/SmoothScrollProvider";
+import { SmoothScrollProvider } from "../components/ui/smooth-scroll-provider";
 
 export const metadata: Metadata = {
   title: "DVI",

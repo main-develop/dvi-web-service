@@ -1,5 +1,5 @@
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import Header from "@/src/components/home/Header";
+import Footer from "@/src/components/home/Footer";
 
 export default function HomeLayout({
   children,

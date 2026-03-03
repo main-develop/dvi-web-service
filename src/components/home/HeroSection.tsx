@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Button } from "./ui/button";
-import { MatrixText } from "./ui/matrix-text";
-import MockupTabs from "./ui/mockup-tabs";
-import { cn } from "../lib/utils";
-import * as motions from "../utils/motion-variants";
+import { Button } from "../ui/button";
+import { MatrixText } from "../ui/matrix-text";
+import MockupTabs from "../ui/mockup-tabs";
+import { cn } from "@/src/lib/utils";
+import * as motions from "@/src/utils/get-motion-variants";
 
 export default function HeroSection() {
   const containerVariants = motions.getContainerVariants();
