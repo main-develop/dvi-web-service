@@ -9,11 +9,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, label, type, ...props }, ref) => {
     const inputClasses = cn(
       "file:text-foreground placeholder:text-muted-foreground bg-transparent border-input",
-      "border-2 h-9 w-full min-w-0 rounded-md bg-transparent px-3 py-1 text-base shadow-xs",
-      "transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0",
-      "file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none",
-      "disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all",
-      "duration-300 ease-in focus-visible:border-matrix-80 focus-visible:ring-matrix-80",
+      "border-2 h-9 w-full min-w-0 rounded-md px-3 py-1 text-base shadow-xs outline-none",
+      "transition-[color,box-shadow] file:inline-flex file:h-7 file:border-0 file:text-sm",
+      "file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed",
+      "disabled:opacity-50 md:text-sm transition-all duration-300 ease-in",
+      "focus-visible:border-matrix-80 focus-visible:ring-matrix-80",
       "aria-invalid:ring-destructive aria-invalid:border-destructive",
       label && "peer",
       className,

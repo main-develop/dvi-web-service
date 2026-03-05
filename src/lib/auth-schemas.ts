@@ -24,3 +24,10 @@ export const signupSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const otpSchema = z.object({
+  otp: z
+    .string()
+    .length(6, "Code must be 6 digits")
+    .regex(/^[a-zA-Z0-9]+$/, "Code must be alphanumeric"),
+});

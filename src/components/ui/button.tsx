@@ -6,10 +6,10 @@ import { cn } from "@/src/lib/utils";
 
 const buttonVariants = cva(
   cn(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-[0.813rem]",
+    "inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-md text-[0.813rem]",
     "font-medium transition-all duration-300 outline-none disabled:cursor-not-allowed disabled:opacity-50",
     "[&_svg]:pointer-events-none uppercase [&_svg:not([class*='size-'])]:size-4 shrink-0",
-    "[&_svg]:shrink-0 aria-invalid:border-destructive select-none cursor-pointer",
+    "[&_svg]:shrink-0 aria-invalid:border-destructive select-none cursor-pointer leading-none",
   ),
   {
     variants: {
@@ -25,7 +25,7 @@ const buttonVariants = cva(
           "dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
         ),
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        ghost: "hover:text-accent-foreground hover:bg-accent/50 disabled:hover:bg-background",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
@@ -38,7 +38,8 @@ const buttonVariants = cva(
       },
       effect: {
         none: "",
-        scale: "active:scale-[0.93] transition-transform duration-150 ease-in-out",
+        scale:
+          "active:scale-[0.93] disabled:active:scale-100 transition-transform duration-150 ease-in-out",
       },
     },
     defaultVariants: {

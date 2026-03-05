@@ -1,3 +1,4 @@
+import "@/src/components/auth/auth.module.css";
 import Header from "@/src/components/home/Header";
 
 export default function AuthLayout({
