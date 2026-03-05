@@ -25,6 +25,12 @@ export const signupSchema = z
     path: ["confirmPassword"],
   });
 
+export const signinSchema = z.object({
+  emailOrUsername: z.string().min(1, "This field is required"),
+  password: z.string().min(1, "Password is required"),
+  rememberMe: z.boolean().optional(),
+});
+
 export const otpSchema = z.object({
   otp: z
     .string()
