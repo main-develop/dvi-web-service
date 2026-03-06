@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Label } from "../ui/label";
@@ -42,10 +42,6 @@ export default function Signup() {
       agreeTerms: false,
     },
     shouldFocusError: false,
-  });
-  const isAgreed = useWatch({
-    control: form.control,
-    name: "agreeTerms",
   });
 
   const onSubmit = (data: z.infer<typeof signupSchema>) => {
