@@ -8,8 +8,9 @@ import { FormControl, FormField, FormItem } from "../ui/form";
 import * as z from "zod";
 import { signinSchema } from "@/src/lib/auth-schemas";
 import { getTextLink } from "@/src/utils/get-text-link";
-import { AuthForm } from "./AuthForm";
+import AuthForm from "./AuthForm";
 import { useRouter } from "next/navigation";
+import AuthSection from "./AuthSection";
 
 interface SigninFieldProps {
   name: "emailOrUsername" | "password";
@@ -24,6 +25,7 @@ const signinFields: SigninFieldProps[] = [
 
 export default function Signin() {
   const router = useRouter();
+
   const form = useForm<z.infer<typeof signinSchema>>({
     resolver: zodResolver(signinSchema),
     defaultValues: { emailOrUsername: "", password: "", rememberMe: false },
@@ -36,35 +38,40 @@ export default function Signin() {
   };
 
   return (
-    <AuthForm
-      form={form}
-      fields={signinFields}
-      onSubmit={onSubmit}
-      submitButtonText="Sign in"
-      headerText="Sign in"
-      paragraphText={["Don't have an account?", "/sign-up", "Sign up"]}
+    <AuthSection
+      sectionHeader="Sign in"
+      sectionFooter={{ text: "Don't have an account?", href: "/sign-up", linkText: "Sign up" }}
     >
-      <div className="flex items-center justify-between">
-        <FormField
-          name="rememberMe"
-          render={({ field }) => (
-            <FormItem className="flex items-center">
-              <FormControl>
-                <Checkbox
-                  id="rememberMe"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  {...form.register("rememberMe")}
-                />
-              </FormControl>
-              <Label htmlFor="rememberMe" className="text-muted-foreground text-center select-auto">
-                Remember me
-              </Label>
-            </FormItem>
-          )}
-        />
-        <p className="text-center text-sm">{getTextLink("/forgot-password", "Forgot password?")}</p>
-      </div>
-    </AuthForm>
+      <AuthForm form={form} fields={signinFields} onSubmit={onSubmit} submitButtonText="Sign in">
+        <div className="flex items-center justify-between">
+          <FormField
+            name="rememberMe"
+            render={({ field }) => (
+              <FormItem className="flex items-center">
+                <FormControl>
+                  <Checkbox
+                    id="rememberMe"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    {...form.register("rememberMe")}
+                  />
+                </FormControl>
+
+                <Label
+                  htmlFor="rememberMe"
+                  className="text-muted-foreground text-center select-auto"
+                >
+                  Remember me
+                </Label>
+              </FormItem>
+            )}
+          />
+
+          <p className="text-center text-sm">
+            {getTextLink("/reset-password", "Forgot password?")}
+          </p>
+        </div>
+      </AuthForm>
+    </AuthSection>
   );
 }

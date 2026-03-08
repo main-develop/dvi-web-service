@@ -25,9 +25,16 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className="relative">
-        <input type={type} className={inputClasses} ref={ref} placeholder=" " {...props} />
+        <input
+          type={type}
+          className={inputClasses}
+          ref={ref}
+          placeholder=" "
+          id={props.id || props.name}
+          {...props}
+        />
         <label
-          htmlFor={props.id}
+          htmlFor={props.id || props.name}
           className={cn(
             "absolute start-2 top-2 z-10 origin-[0] rounded-4xl px-2 duration-300 select-none",
             "text-foreground -translate-y-4 scale-90 transform text-sm leading-4 font-medium",

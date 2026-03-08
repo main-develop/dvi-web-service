@@ -13,6 +13,8 @@ import * as z from "zod";
 import { otpSchema } from "@/src/lib/auth-schemas";
 import { useState, useEffect } from "react";
 import NumberFlow, { continuous, NumberFlowGroup } from "@number-flow/react";
+import { motion } from "motion/react";
+import { getItemVariants } from "@/src/utils/get-motion-variants";
 
 function InputOTP({
   className,
@@ -111,8 +113,12 @@ export default function OTPVerification({ email, onSuccess, onBack }: OTPVerific
   }, [resendCooldown]);
 
   return (
-    <div className="text-foreground relative w-full max-w-sm space-y-8 p-8">
-      <h2 className="matrix-text text-center text-3xl font-bold uppercase">Verify Email</h2>
+    <motion.div
+      variants={getItemVariants(0, 0, 0.7)}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8"
+    >
       <p className="text-center text-sm">
         A 6-digit code has been sent to <span className="font-bold">{email}</span>.<br />
         Enter it below.
@@ -137,11 +143,11 @@ export default function OTPVerification({ email, onSuccess, onBack }: OTPVerific
                 <FormMessage />
               </FormItem>
             )}
-          ></FormField>
+          />
 
           <Button
             type="submit"
-            className="w-full tracking-tight transition-all duration-300"
+            className="w-full transition-all duration-300"
             disabled={otpValue.length < 6}
           >
             Verify
@@ -188,6 +194,6 @@ export default function OTPVerification({ email, onSuccess, onBack }: OTPVerific
           )}
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 }
