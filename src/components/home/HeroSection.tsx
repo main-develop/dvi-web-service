@@ -55,7 +55,7 @@ export default function HeroSection() {
                 onClick={() => router.push(href)}
                 className={cn(
                   "matrix-box-shadow bg-matrix/10 hover:bg-matrix/15",
-                  "border-matrix text-primary border-1",
+                  "border-matrix text-primary border-1 transition-all duration-400",
                 )}
               >
                 {title}

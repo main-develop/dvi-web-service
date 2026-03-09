@@ -84,7 +84,10 @@ export default function ResetPassword() {
         >
           <p className="text-center text-sm">Your password has been changed successfully.</p>
 
-          <Button onClick={() => router.push("/sign-in")} className="w-full tracking-tight">
+          <Button
+            onClick={() => router.push("/sign-in")}
+            className="w-full tracking-tight transition-all duration-400"
+          >
             Sign in
           </Button>
         </motion.div>

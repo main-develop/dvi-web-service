@@ -29,7 +29,7 @@ export function PricingTab({ text, selected, setSelected }: PricingTabProps) {
         <motion.span
           layoutId="tab"
           transition={{ type: "keyframes", duration: 0.3 }}
-          className="text-secondary bg-primary absolute inset-0 z-0 rounded-md shadow-sm"
+          className="text-secondary bg-primary/90 absolute inset-0 z-0 rounded-md shadow-sm"
         />
       )}
     </Button>

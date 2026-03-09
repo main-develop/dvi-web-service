@@ -129,7 +129,7 @@ export default function AuthForm<T extends FieldValues>({
 
           {children}
 
-          <Button type="submit" className="w-full tracking-tight">
+          <Button type="submit" className="w-full tracking-tight transition-all duration-400">
             {submitButtonText}
           </Button>
         </form>

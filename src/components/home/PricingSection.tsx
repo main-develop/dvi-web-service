@@ -232,12 +232,7 @@ export const PricingSection = ({
                   </ul>
                 </div>
 
-                <Button
-                  className={cn(
-                    "sm:bg-primary/90 hover:bg-primary/80",
-                    "cursor-pointer tracking-tight transition-all",
-                  )}
-                >
+                <Button className={cn("cursor-pointer tracking-tight transition-all duration-400")}>
                   {tier.cta}
                 </Button>
               </Card>

@@ -12,7 +12,7 @@ export const getNavLinks = (navLinks: NavLinkProps[], className: string = "") =>
       key={link.title}
       href={link.href}
       className={cn(
-        "text-primary-foreground hover:text-primary/90 tracking-[0.04rem] uppercase transition",
+        "text-primary-foreground hover:text-primary/90 tracking-[0.04rem] uppercase transition-all duration-400",
         className,
       )}
     >

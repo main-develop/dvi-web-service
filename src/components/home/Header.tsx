@@ -23,7 +23,7 @@ const getSignButtons = (router: AppRouterInstance, className: string = "") =>
     <Button
       key={href}
       onClick={() => router.push(href)}
-      className={`${className} sm:bg-primary/90 hover:bg-primary/80 tracking-tight`}
+      className={`${className} tracking-tight transition-all duration-400`}
     >
       {href.replace("-", " ")}
     </Button>
