@@ -58,7 +58,13 @@ export default function Signup() {
       }
     >
       {currentStep === 0 && (
-        <AuthForm form={form} fields={signupFields} onSubmit={onSubmit} submitButtonText="Sign up">
+        <AuthForm
+          form={form}
+          fields={signupFields}
+          onSubmit={onSubmit}
+          submitButtonText="Sign up"
+          showHints
+        >
           <FormField
             control={form.control}
             name="agreeTerms"

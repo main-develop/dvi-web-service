@@ -140,7 +140,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <div
       className={cn(
-        "grid transition-[grid-template-rows,opacity] duration-300 ease-in-out",
+        "grid transition-[grid-template-rows,opacity] duration-400 ease-in-out",
         isVisible ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
       )}
       onTransitionEnd={() => {

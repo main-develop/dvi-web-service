@@ -5,8 +5,9 @@ import { Button } from "../ui/button";
 import { motion } from "motion/react";
 import { getItemVariants } from "@/src/utils/get-motion-variants";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Check, Eye, EyeOff, X } from "lucide-react";
 import { cn } from "@/src/lib/utils";
+import { passwordRequirements } from "@/src/lib/auth-schemas";
 
 interface AuthFormProps<T extends FieldValues> {
   form: UseFormReturn<T, unknown, T>;
@@ -14,6 +15,7 @@ interface AuthFormProps<T extends FieldValues> {
   onSubmit: (data: T) => void;
   submitButtonText: string;
   formDescription?: string;
+  showHints?: boolean;
   children?: React.ReactNode;
 }
 
@@ -23,9 +25,11 @@ export default function AuthForm<T extends FieldValues>({
   onSubmit,
   submitButtonText,
   formDescription,
+  showHints,
   children,
 }: AuthFormProps<T>) {
   const [visibleFields, setVisibleFields] = useState<{ [key: string]: boolean }>({});
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   return (
     <motion.div
@@ -38,46 +42,90 @@ export default function AuthForm<T extends FieldValues>({
 
       <Form {...form}>
         <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {fields.map(({ name, type, label }) => (
-            <FormField
-              key={name as string}
-              control={form.control}
-              name={name as Path<T>}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        type={type === "password" && visibleFields[name as string] ? "text" : type}
-                        label={label}
-                        {...field}
-                      />
-                      {type === "password" && (
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          onClick={() =>
-                            setVisibleFields((prev) => ({
-                              ...prev,
-                              [name]: !prev[name as string],
-                            }))
+          {fields.map(({ name, type, label }) => {
+            const showPasswordHints = name === "password" && showHints;
+
+            return (
+              <FormField
+                key={name as string}
+                control={form.control}
+                name={name as Path<T>}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          type={
+                            type === "password" && visibleFields[name as string] ? "text" : type
                           }
-                          className={cn(
-                            "hover:text-muted-foreground text-muted-foreground/60 absolute",
-                            "inset-y-0 right-0 flex w-9 items-center justify-center",
-                            "transition-all duration-300 hover:bg-transparent",
-                          )}
-                        >
-                          {visibleFields[name as string] ? <EyeOff /> : <Eye />}
-                        </Button>
-                      )}
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
+                          label={label}
+                          onFocus={
+                            showPasswordHints ? () => setFocusedField(name as string) : undefined
+                          }
+                          {...field}
+                          onBlur={() => setFocusedField(null)}
+                        />
+
+                        {type === "password" && (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() =>
+                              setVisibleFields((prev) => ({
+                                ...prev,
+                                [name]: !prev[name as string],
+                              }))
+                            }
+                            className={cn(
+                              "hover:text-muted-foreground text-muted-foreground/60 absolute",
+                              "inset-y-2.5 right-2 flex size-1 items-center justify-center rounded-none",
+                              "bg-background hover:bg-background transition-all duration-300",
+                            )}
+                          >
+                            {visibleFields[name as string] ? <EyeOff /> : <Eye />}
+                          </Button>
+                        )}
+                      </div>
+                    </FormControl>
+
+                    {showPasswordHints ? (
+                      <div
+                        className={cn(
+                          "grid transition-[grid-template-rows,opacity] duration-600 ease-in-out",
+                          focusedField === name
+                            ? "grid-rows-[1fr] opacity-100"
+                            : "grid-rows-[0fr] opacity-0",
+                        )}
+                      >
+                        <ul className="space-y-1 overflow-hidden text-sm">
+                          {passwordRequirements.map(({ message, regex }, id) => {
+                            const isMet = regex.test(field.value);
+
+                            return (
+                              <li
+                                key={id}
+                                className={cn(
+                                  "flex items-center gap-2 transition-colors duration-400",
+                                  isMet ? "text-matrix/70" : "text-muted-foreground/60",
+                                )}
+                              >
+                                {isMet ? <Check size={15} /> : <X size={15} />}
+
+                                <span>{message}</span>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    ) : (
+                      <FormMessage />
+                    )}
+                  </FormItem>
+                )}
+              />
+            );
+          })}
 
           {children}
 

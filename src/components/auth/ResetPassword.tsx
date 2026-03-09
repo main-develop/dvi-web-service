@@ -71,6 +71,7 @@ export default function ResetPassword() {
           onSubmit={onPasswordResetSubmit}
           submitButtonText="Reset password"
           formDescription="Choose a new strong password for your account."
+          showHints
         />
       )}
 
