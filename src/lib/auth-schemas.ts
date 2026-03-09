@@ -15,12 +15,12 @@ for (const { regex, message } of passwordRequirements) {
 
 export const signupSchema = z
   .object({
-    email: z.email("Invalid email address"),
+    email: z.email("Invalid email address").max(254, "Email must be at most 254 characters"),
     username: z
       .string()
       .min(3, "Username must be at least 3 characters")
-      .max(20, "Username must be at most 20 characters")
-      .regex(/^[a-zA-Z0-9]+$/, "Username must be alphanumeric"),
+      .max(25, "Username must be at most 25 characters")
+      .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
     password: passwordSchema,
     confirmPassword: z.string(),
     agreeTerms: z
@@ -33,8 +33,14 @@ export const signupSchema = z
   });
 
 export const signinSchema = z.object({
-  emailOrUsername: z.string().min(1, "This field is required"),
-  password: z.string().min(1, "Password is required"),
+  emailOrUsername: z
+    .string()
+    .min(1, "This field is required")
+    .max(254, "This field can be at most 254 characters"),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .max(20, "Password can be at most 20 characters"),
   rememberMe: z.boolean().optional(),
 });
 
@@ -46,7 +52,7 @@ export const otpSchema = z.object({
 });
 
 export const forgotPasswordSchema = z.object({
-  email: z.email("Invalid email address"),
+  email: z.email("Invalid email address").max(254, "Email can be at most 254 characters"),
 });
 
 export const passwordResetSchema = z

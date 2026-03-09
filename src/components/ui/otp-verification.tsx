@@ -121,7 +121,7 @@ export default function OTPVerification({ email, onSuccess, onBack }: OTPVerific
       className="space-y-8"
     >
       <p className="text-center text-sm">
-        A 6-digit code has been sent to <span className="font-bold">{email}</span>.<br />
+        A 6-digit code has been sent to <span className="font-bold break-all">{email}</span>.<br />
         Enter it below.
       </p>
 
