@@ -8,6 +8,7 @@ import { useState } from "react";
 import { AlertTriangle, Check, Eye, EyeOff, X } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { passwordRequirements } from "@/src/lib/auth-schemas";
+import { Spinner } from "../ui/spinner";
 
 interface AuthFormProps<T extends FieldValues> {
   form: UseFormReturn<T, unknown, T>;
@@ -144,8 +145,12 @@ export default function AuthForm<T extends FieldValues>({
             {formRootErrors?.clientError ? formRootErrors.clientError.message : ""}
           </FormMessage>
 
-          <Button type="submit" className="w-full tracking-tight transition-all duration-400">
-            {submitButtonText}
+          <Button
+            type="submit"
+            className="w-full tracking-tight transition-all duration-400"
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? <Spinner /> : submitButtonText}
           </Button>
         </form>
       </Form>

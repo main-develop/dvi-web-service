@@ -19,6 +19,7 @@ import {
   sendVerifyRequest,
   VerificationPurposeType,
 } from "@/src/api/auth-requests";
+import { Spinner } from "./spinner";
 
 function InputOTP({
   className,
@@ -206,9 +207,9 @@ export default function OTPVerification({
           <Button
             type="submit"
             className="w-full transition-all duration-300"
-            disabled={watchedOtp.length < 6}
+            disabled={watchedOtp.length < 6 || form.formState.isSubmitting}
           >
-            Verify
+            {form.formState.isSubmitting ? <Spinner /> : "Verify"}
           </Button>
         </form>
       </Form>
