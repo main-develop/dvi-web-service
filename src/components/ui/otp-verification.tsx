@@ -4,7 +4,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as React from "react";
 import { OTPInput, OTPInputContext } from "input-otp";
-import { AlertTriangle, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 import { cn } from "@/src/lib/utils";
 import { Button } from "./button";
@@ -20,6 +20,7 @@ import {
   VerificationPurposeType,
 } from "@/src/api/auth-requests";
 import { Spinner } from "./spinner";
+import { toast } from "sonner";
 
 function InputOTP({
   className,
@@ -114,8 +115,6 @@ export default function OTPVerification({
     form.clearErrors("otp");
   }, [watchedOtp, form.clearErrors]);
 
-  const formRootErrors = form.formState.errors.root;
-
   const onSubmit = async (data: OtpSchema) => {
     const response = await sendVerifyRequest(data);
 
@@ -125,12 +124,11 @@ export default function OTPVerification({
       }
       onSuccess();
     } else {
-      console.log(response);
       const responseType = response.data.type;
       const error = response.data.errors[0];
 
       if (responseType === "server_error") {
-        form.setError("root.serverError", { type: responseType, message: error.detail });
+        toast.warning(error.detail, { id: "server-error" });
       }
       if (error.attr === "otp") {
         form.setError("otp", { type: responseType, message: error.detail });
@@ -142,14 +140,12 @@ export default function OTPVerification({
 
   const onResend = async () => {
     setResendCooldown(60);
+
     const response = await resendVerificationEmailRequest({ email: email, purpose: purpose });
 
     if (!response.ok) {
-      const responseType = response.data.type;
-      const error = response.data.errors[0];
-
-      if (responseType === "server_error") {
-        form.setError("root.serverError", { type: responseType, message: error.detail });
+      if (response.data.type === "server_error") {
+        toast.warning(response.data.errors[0].detail, { id: "server-error" });
       }
     }
   };
@@ -169,15 +165,6 @@ export default function OTPVerification({
       className="space-y-8"
     >
       <Form {...form}>
-        <FormMessage className="!mt-4 !mb-6">
-          {formRootErrors?.serverError && (
-            <span className="flex items-center justify-center gap-2 text-orange-500">
-              <AlertTriangle size={18} />
-              {formRootErrors?.serverError.message}
-            </span>
-          )}
-        </FormMessage>
-
         <p className="text-center text-sm">
           A 6-digit code has been sent to <span className="font-bold break-all">{email}</span>.
           <br />

@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { motion } from "motion/react";
 import { getItemVariants } from "@/src/utils/get-motion-variants";
 import { useState } from "react";
-import { AlertTriangle, Check, Eye, EyeOff, X } from "lucide-react";
+import { Check, Eye, EyeOff, X } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { passwordRequirements } from "@/src/lib/auth-schemas";
 import { Spinner } from "../ui/spinner";
@@ -41,15 +41,6 @@ export default function AuthForm<T extends FieldValues>({
       className="space-y-8"
     >
       <Form {...form}>
-        <FormMessage className="!mt-4 !mb-6">
-          {formRootErrors?.serverError && (
-            <span className="flex items-center justify-center gap-2 text-orange-500">
-              <AlertTriangle size={18} />
-              {formRootErrors.serverError.message}
-            </span>
-          )}
-        </FormMessage>
-
         {formDescription && <p className="text-center text-sm">{formDescription}</p>}
 
         <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

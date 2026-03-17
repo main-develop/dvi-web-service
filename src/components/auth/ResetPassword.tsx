@@ -13,12 +13,10 @@ import AuthForm from "./AuthForm";
 import { useState } from "react";
 import OTPVerification from "../ui/otp-verification";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
-import { motion } from "motion/react";
-import { getItemVariants } from "@/src/utils/get-motion-variants";
 import AuthSection from "./AuthSection";
 import { sendForgotPasswordRequest, sendResetPasswordRequest } from "@/src/api/user-requests";
 import { VerificationPurpose } from "@/src/api/auth-requests";
+import { toast } from "sonner";
 
 interface PasswordResetProps {
   name: "newPassword" | "confirmPassword";
@@ -33,7 +31,6 @@ const passwordResetFields: PasswordResetProps[] = [
 
 export default function ResetPassword() {
   const [currentStep, setCurrentStep] = useState(0);
-  const router = useRouter();
 
   const forgotPasswordForm = useForm<ForgotPasswordSchema>({
     resolver: zodResolver(forgotPasswordSchema),
@@ -52,13 +49,8 @@ export default function ResetPassword() {
     if (response.ok) {
       setCurrentStep(1);
     } else {
-      const responseType = response.data.type;
-
-      if (responseType === "server_error") {
-        forgotPasswordForm.setError("root.serverError", {
-          type: responseType,
-          message: response.data.errors[0].detail,
-        });
+      if (response.data.type === "server_error") {
+        toast.warning(response.data.errors[0].detail, { id: "server-error" });
       }
     }
   };
@@ -76,15 +68,13 @@ export default function ResetPassword() {
     const response = await sendResetPasswordRequest(data);
 
     if (response.ok) {
-      setCurrentStep(3);
-    } else {
-      const responseType = response.data.type;
+      toast.success("Your password has been successfully reset.", { id: "password-reset" });
 
-      if (responseType === "server_error") {
-        passwordResetForm.setError("root.serverError", {
-          type: responseType,
-          message: response.data.errors[0].detail,
-        });
+      const router = useRouter();
+      router.push("/sign-in");
+    } else {
+      if (response.data.type === "server_error") {
+        toast.warning(response.data.errors[0].detail, { id: "server-error" });
       }
     }
   };
@@ -120,24 +110,6 @@ export default function ResetPassword() {
           formDescription="Choose a new strong password for your account."
           showHints
         />
-      )}
-
-      {currentStep === 3 && (
-        <motion.div
-          variants={getItemVariants(0, 0, 0.7)}
-          initial="hidden"
-          animate="visible"
-          className="space-y-8"
-        >
-          <p className="mt-6 text-center text-sm">Your password has been changed successfully.</p>
-
-          <Button
-            onClick={() => router.push("/sign-in")}
-            className="w-full tracking-tight transition-all duration-400"
-          >
-            Sign in
-          </Button>
-        </motion.div>
       )}
     </AuthSection>
   );

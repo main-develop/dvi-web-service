@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import AuthForm from "./AuthForm";
 import AuthSection from "./AuthSection";
 import { sendSignupRequest, VerificationPurpose } from "@/src/api/auth-requests";
+import { toast } from "sonner";
 
 interface SignupFieldProps {
   name: "email" | "username" | "password" | "confirmPassword";
@@ -29,7 +30,6 @@ const signupFields: SignupFieldProps[] = [
 
 export default function Signup() {
   const [currentStep, setCurrentStep] = useState(0);
-  const router = useRouter();
 
   const form = useForm<SignupSchema>({
     resolver: zodResolver(signupSchema),
@@ -74,10 +74,17 @@ export default function Signup() {
         } else if (error.attr === "username") {
           form.setError("username", { type: responseType, message: error.detail });
         } else {
-          form.setError("root.serverError", { type: responseType, message: error.detail });
+          toast.warning(error.detail, { id: "server-error" });
         }
       });
     }
+  };
+
+  const onSuccess = () => {
+    toast.success("Your account has been successfully created.", { id: "account-created" });
+
+    const router = useRouter();
+    router.push("/sign-in");
   };
 
   return (
@@ -128,7 +135,7 @@ export default function Signup() {
         <OTPVerification
           email={form.getValues("email")}
           purpose={VerificationPurpose.ACCOUNT_ACTIVATION}
-          onSuccess={() => router.push("/sign-in")}
+          onSuccess={onSuccess}
           onBack={() => setCurrentStep(0)}
         />
       )}

@@ -11,6 +11,7 @@ import AuthForm from "./AuthForm";
 import { useRouter } from "next/navigation";
 import AuthSection from "./AuthSection";
 import { sendSigninRequest } from "@/src/api/auth-requests";
+import { toast } from "sonner";
 
 interface SigninFieldProps {
   name: "usernameOrEmail" | "password";
@@ -24,8 +25,6 @@ const signinFields: SigninFieldProps[] = [
 ];
 
 export default function Signin() {
-  const router = useRouter();
-
   const form = useForm<SigninSchema>({
     resolver: zodResolver(signinSchema),
     defaultValues: { usernameOrEmail: "", password: "", rememberMe: false },
@@ -36,13 +35,14 @@ export default function Signin() {
     const response = await sendSigninRequest(data);
 
     if (response.ok) {
+      const router = useRouter();
       router.push("/dashboard");
     } else {
       const responseType = response.data.type;
       const message = response.data.errors[0].detail;
 
       if (responseType === "server_error") {
-        form.setError("root.serverError", { type: responseType, message: message });
+        toast.warning(message, { id: "server-error" });
       }
       if (responseType === "client_error") {
         form.setError("root.clientError", { type: responseType, message: message });
