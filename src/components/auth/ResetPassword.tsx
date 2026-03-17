@@ -64,13 +64,14 @@ export default function ResetPassword() {
     }
   };
 
+  const router = useRouter();
+
   const onPasswordResetSubmit = async (data: PasswordResetSchema) => {
     const response = await sendResetPasswordRequest(data);
 
     if (response.ok) {
       toast.success("Your password has been successfully reset.", { id: "password-reset" });
 
-      const router = useRouter();
       router.push("/sign-in");
     } else {
       if (response.data.type === "server_error") {

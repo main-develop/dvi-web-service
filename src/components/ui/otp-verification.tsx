@@ -113,6 +113,7 @@ export default function OTPVerification({
 
   useEffect(() => {
     form.clearErrors("otp");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchedOtp, form.clearErrors]);
 
   const onSubmit = async (data: OtpSchema) => {

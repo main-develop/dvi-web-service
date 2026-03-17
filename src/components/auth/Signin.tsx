@@ -31,11 +31,12 @@ export default function Signin() {
     shouldFocusError: false,
   });
 
+  const router = useRouter();
+
   const onSubmit = async (data: SigninSchema) => {
     const response = await sendSigninRequest(data);
 
     if (response.ok) {
-      const router = useRouter();
       router.push("/dashboard");
     } else {
       const responseType = response.data.type;

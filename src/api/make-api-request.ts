@@ -25,7 +25,7 @@ export async function makeApiRequest<T = unknown>(
     }
 
     return { ok: true, data: responseData };
-  } catch (error) {
+  } catch {
     return {
       ok: false,
       data: {

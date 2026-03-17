@@ -54,10 +54,12 @@ export default function Signup() {
 
   useEffect(() => {
     form.clearErrors("email");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchedEmail, form.clearErrors]);
 
   useEffect(() => {
     form.clearErrors("username");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchedUsername, form.clearErrors]);
 
   const onSubmit = async (data: SignupSchema) => {
@@ -80,10 +82,11 @@ export default function Signup() {
     }
   };
 
+  const router = useRouter();
+
   const onSuccess = () => {
     toast.success("Your account has been successfully created.", { id: "account-created" });
 
-    const router = useRouter();
     router.push("/sign-in");
   };
 
