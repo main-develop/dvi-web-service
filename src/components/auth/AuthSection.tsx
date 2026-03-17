@@ -16,7 +16,7 @@ export default function AuthSection({ sectionHeader, sectionFooter, children }: 
       animate="visible"
       className="space-y-8"
     >
-      <h2 className="matrix-text text-center text-3xl font-bold uppercase">{sectionHeader}</h2>
+      <h2 className="matrix-text my-0 text-center text-3xl font-bold uppercase">{sectionHeader}</h2>
 
       {children}
 

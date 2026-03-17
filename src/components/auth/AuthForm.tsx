@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { motion } from "motion/react";
 import { getItemVariants } from "@/src/utils/get-motion-variants";
 import { useState } from "react";
-import { Check, Eye, EyeOff, X } from "lucide-react";
+import { AlertTriangle, Check, Eye, EyeOff, X } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { passwordRequirements } from "@/src/lib/auth-schemas";
 
@@ -30,6 +30,7 @@ export default function AuthForm<T extends FieldValues>({
 }: AuthFormProps<T>) {
   const [visibleFields, setVisibleFields] = useState<{ [key: string]: boolean }>({});
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const formRootErrors = form.formState.errors.root;
 
   return (
     <motion.div
@@ -38,12 +39,22 @@ export default function AuthForm<T extends FieldValues>({
       animate="visible"
       className="space-y-8"
     >
-      {formDescription && <p className="text-center text-sm">{formDescription}</p>}
-
       <Form {...form}>
+        <FormMessage className="!mt-4 !mb-6">
+          {formRootErrors?.serverError && (
+            <span className="flex items-center justify-center gap-2 text-orange-500">
+              <AlertTriangle size={18} />
+              {formRootErrors.serverError.message}
+            </span>
+          )}
+        </FormMessage>
+
+        {formDescription && <p className="text-center text-sm">{formDescription}</p>}
+
         <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {fields.map(({ name, type, label }) => {
-            const showPasswordHints = name === "password" && showHints;
+            const showPasswordHints =
+              ["password", "newPassword"].includes(name as string) && showHints;
 
             return (
               <FormField
@@ -128,6 +139,10 @@ export default function AuthForm<T extends FieldValues>({
           })}
 
           {children}
+
+          <FormMessage className="!my-[13px]">
+            {formRootErrors?.clientError ? formRootErrors.clientError.message : ""}
+          </FormMessage>
 
           <Button type="submit" className="w-full tracking-tight transition-all duration-400">
             {submitButtonText}

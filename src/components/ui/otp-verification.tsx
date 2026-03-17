@@ -4,17 +4,21 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as React from "react";
 import { OTPInput, OTPInputContext } from "input-otp";
-import { ChevronLeft } from "lucide-react";
+import { AlertTriangle, ChevronLeft } from "lucide-react";
 
 import { cn } from "@/src/lib/utils";
 import { Button } from "./button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
-import * as z from "zod";
-import { otpSchema } from "@/src/lib/auth-schemas";
+import { OtpSchema, otpSchema } from "@/src/lib/auth-schemas";
 import { useState, useEffect } from "react";
 import NumberFlow, { continuous, NumberFlowGroup } from "@number-flow/react";
 import { motion } from "motion/react";
 import { getItemVariants } from "@/src/utils/get-motion-variants";
+import {
+  resendVerificationEmailRequest,
+  sendVerifyRequest,
+  VerificationPurposeType,
+} from "@/src/api/auth-requests";
 
 function InputOTP({
   className,
@@ -84,26 +88,69 @@ function InputOTPSlot({
 
 interface OTPVerificationProps {
   email: string;
-  onSuccess: () => void;
+  purpose: VerificationPurposeType;
+  onSuccess: (data?: Record<string, unknown>) => void;
   onBack?: () => void;
 }
 
-export default function OTPVerification({ email, onSuccess, onBack }: OTPVerificationProps) {
-  const [resendCooldown, setResendCooldown] = useState(0);
-
-  const form = useForm<z.infer<typeof otpSchema>>({
+export default function OTPVerification({
+  email,
+  purpose,
+  onSuccess,
+  onBack,
+}: OTPVerificationProps) {
+  const form = useForm<OtpSchema>({
     resolver: zodResolver(otpSchema),
-    defaultValues: { otp: "" },
+    defaultValues: { otp: "", email: email, purpose: purpose },
   });
 
-  const otpValue = useWatch({
+  const watchedOtp = useWatch({
     control: form.control,
     name: "otp",
   });
 
-  const onSubmit = (data: z.infer<typeof otpSchema>) => {
-    console.log("OTP:", data.otp);
-    onSuccess();
+  useEffect(() => {
+    form.clearErrors("otp");
+  }, [watchedOtp, form.clearErrors]);
+
+  const formRootErrors = form.formState.errors.root;
+
+  const onSubmit = async (data: OtpSchema) => {
+    const response = await sendVerifyRequest(data);
+
+    if (response.ok) {
+      if (response.data) {
+        onSuccess({ uid: response.data.uid, token: response.data.token });
+      }
+      onSuccess();
+    } else {
+      console.log(response);
+      const responseType = response.data.type;
+      const error = response.data.errors[0];
+
+      if (responseType === "server_error") {
+        form.setError("root.serverError", { type: responseType, message: error.detail });
+      }
+      if (error.attr === "otp") {
+        form.setError("otp", { type: responseType, message: error.detail });
+      }
+    }
+  };
+
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  const onResend = async () => {
+    setResendCooldown(60);
+    const response = await resendVerificationEmailRequest({ email: email, purpose: purpose });
+
+    if (!response.ok) {
+      const responseType = response.data.type;
+      const error = response.data.errors[0];
+
+      if (responseType === "server_error") {
+        form.setError("root.serverError", { type: responseType, message: error.detail });
+      }
+    }
   };
 
   useEffect(() => {
@@ -120,12 +167,22 @@ export default function OTPVerification({ email, onSuccess, onBack }: OTPVerific
       animate="visible"
       className="space-y-8"
     >
-      <p className="text-center text-sm">
-        A 6-digit code has been sent to <span className="font-bold break-all">{email}</span>.<br />
-        Enter it below.
-      </p>
-
       <Form {...form}>
+        <FormMessage className="!mt-4 !mb-6">
+          {formRootErrors?.serverError && (
+            <span className="flex items-center justify-center gap-2 text-orange-500">
+              <AlertTriangle size={18} />
+              {formRootErrors?.serverError.message}
+            </span>
+          )}
+        </FormMessage>
+
+        <p className="text-center text-sm">
+          A 6-digit code has been sent to <span className="font-bold break-all">{email}</span>.
+          <br />
+          Enter it below.
+        </p>
+
         <form spellCheck={false} onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
@@ -149,7 +206,7 @@ export default function OTPVerification({ email, onSuccess, onBack }: OTPVerific
           <Button
             type="submit"
             className="w-full transition-all duration-300"
-            disabled={otpValue.length < 6}
+            disabled={watchedOtp.length < 6}
           >
             Verify
           </Button>
@@ -164,7 +221,7 @@ export default function OTPVerification({ email, onSuccess, onBack }: OTPVerific
 
         <Button
           variant="ghost"
-          onClick={() => setResendCooldown(60)}
+          onClick={() => onResend()}
           disabled={resendCooldown > 0}
           className="transition-all duration-300"
         >

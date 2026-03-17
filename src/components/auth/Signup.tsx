@@ -1,18 +1,18 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { FormControl, FormField, FormItem } from "../ui/form";
-import * as z from "zod";
-import { signupSchema } from "@/src/lib/auth-schemas";
+import { SignupSchema, signupSchema } from "@/src/lib/auth-schemas";
 import { getTextLink } from "@/src/utils/get-text-link";
 import OTPVerification from "../ui/otp-verification";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AuthForm from "./AuthForm";
 import AuthSection from "./AuthSection";
+import { sendSignupRequest, VerificationPurpose } from "@/src/api/auth-requests";
 
 interface SignupFieldProps {
   name: "email" | "username" | "password" | "confirmPassword";
@@ -31,7 +31,7 @@ export default function Signup() {
   const [currentStep, setCurrentStep] = useState(0);
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof signupSchema>>({
+  const form = useForm<SignupSchema>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
       email: "",
@@ -43,9 +43,41 @@ export default function Signup() {
     shouldFocusError: false,
   });
 
-  const onSubmit = (data: z.infer<typeof signupSchema>) => {
-    console.log("Signup data:", data);
-    setCurrentStep(1);
+  const watchedEmail = useWatch({
+    control: form.control,
+    name: "email",
+  });
+  const watchedUsername = useWatch({
+    control: form.control,
+    name: "username",
+  });
+
+  useEffect(() => {
+    form.clearErrors("email");
+  }, [watchedEmail, form.clearErrors]);
+
+  useEffect(() => {
+    form.clearErrors("username");
+  }, [watchedUsername, form.clearErrors]);
+
+  const onSubmit = async (data: SignupSchema) => {
+    const response = await sendSignupRequest(data);
+
+    if (response.ok) {
+      setCurrentStep(1);
+    } else {
+      const responseType = response.data.type;
+
+      response.data.errors.forEach((error) => {
+        if (error.attr === "email") {
+          form.setError("email", { type: responseType, message: error.detail });
+        } else if (error.attr === "username") {
+          form.setError("username", { type: responseType, message: error.detail });
+        } else {
+          form.setError("root.serverError", { type: responseType, message: error.detail });
+        }
+      });
+    }
   };
 
   return (
@@ -69,7 +101,7 @@ export default function Signup() {
             control={form.control}
             name="agreeTerms"
             render={({ field }) => (
-              <FormItem className="flex items-center">
+              <FormItem className="mb-0 flex items-center">
                 <FormControl>
                   <Checkbox
                     id="agreeTerms"
@@ -95,6 +127,7 @@ export default function Signup() {
       {currentStep === 1 && (
         <OTPVerification
           email={form.getValues("email")}
+          purpose={VerificationPurpose.ACCOUNT_ACTIVATION}
           onSuccess={() => router.push("/sign-in")}
           onBack={() => setCurrentStep(0)}
         />

@@ -142,6 +142,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
       className={cn(
         "grid transition-[grid-template-rows,opacity] duration-400 ease-in-out",
         isVisible ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+        className,
       )}
       onTransitionEnd={() => {
         if (!isVisible) {
@@ -153,7 +154,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
         <p
           data-slot="form-message"
           id={formMessageId}
-          className={cn("text-destructive text-sm", className)}
+          className="text-destructive text-sm"
           {...props}
         >
           {displayBody}

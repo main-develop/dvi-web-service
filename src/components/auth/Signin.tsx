@@ -5,36 +5,49 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { FormControl, FormField, FormItem } from "../ui/form";
-import * as z from "zod";
-import { signinSchema } from "@/src/lib/auth-schemas";
+import { SigninSchema, signinSchema } from "@/src/lib/auth-schemas";
 import { getTextLink } from "@/src/utils/get-text-link";
 import AuthForm from "./AuthForm";
 import { useRouter } from "next/navigation";
 import AuthSection from "./AuthSection";
+import { sendSigninRequest } from "@/src/api/auth-requests";
 
 interface SigninFieldProps {
-  name: "emailOrUsername" | "password";
+  name: "usernameOrEmail" | "password";
   type: React.HTMLInputTypeAttribute;
   label: string;
 }
 
 const signinFields: SigninFieldProps[] = [
-  { name: "emailOrUsername", type: "text", label: "Email or username" },
+  { name: "usernameOrEmail", type: "text", label: "Username or email" },
   { name: "password", type: "password", label: "Password" },
 ];
 
 export default function Signin() {
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof signinSchema>>({
+  const form = useForm<SigninSchema>({
     resolver: zodResolver(signinSchema),
-    defaultValues: { emailOrUsername: "", password: "", rememberMe: false },
+    defaultValues: { usernameOrEmail: "", password: "", rememberMe: false },
     shouldFocusError: false,
   });
 
-  const onSubmit = (data: z.infer<typeof signinSchema>) => {
-    console.log("Signin data:", data);
-    router.push("/dashboard");
+  const onSubmit = async (data: SigninSchema) => {
+    const response = await sendSigninRequest(data);
+
+    if (response.ok) {
+      router.push("/dashboard");
+    } else {
+      const responseType = response.data.type;
+      const message = response.data.errors[0].detail;
+
+      if (responseType === "server_error") {
+        form.setError("root.serverError", { type: responseType, message: message });
+      }
+      if (responseType === "client_error") {
+        form.setError("root.clientError", { type: responseType, message: message });
+      }
+    }
   };
 
   return (
@@ -43,7 +56,7 @@ export default function Signin() {
       sectionFooter={{ text: "Don't have an account?", href: "/sign-up", linkText: "Sign up" }}
     >
       <AuthForm form={form} fields={signinFields} onSubmit={onSubmit} submitButtonText="Sign in">
-        <div className="flex items-center justify-between">
+        <div className="mb-0 flex items-center justify-between">
           <FormField
             name="rememberMe"
             render={({ field }) => (
