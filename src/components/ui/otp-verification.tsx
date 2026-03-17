@@ -9,7 +9,7 @@ import { ChevronLeft } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { Button } from "./button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
-import { OtpSchema, otpSchema } from "@/src/lib/auth-schemas";
+import { OtpSchema, otpSchema } from "@/src/lib/zod-schemas/auth";
 import { useState, useEffect } from "react";
 import NumberFlow, { continuous, NumberFlowGroup } from "@number-flow/react";
 import { motion } from "motion/react";

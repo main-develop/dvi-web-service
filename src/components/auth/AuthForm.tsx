@@ -7,7 +7,7 @@ import { getItemVariants } from "@/src/utils/get-motion-variants";
 import { useState } from "react";
 import { Check, Eye, EyeOff, X } from "lucide-react";
 import { cn } from "@/src/lib/utils";
-import { passwordRequirements } from "@/src/lib/auth-schemas";
+import { passwordRequirements } from "@/src/lib/zod-schemas/auth";
 import { Spinner } from "../ui/spinner";
 
 interface AuthFormProps<T extends FieldValues> {

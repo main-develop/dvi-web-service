@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { FormControl, FormField, FormItem } from "../ui/form";
-import { SignupSchema, signupSchema } from "@/src/lib/auth-schemas";
+import { SignupSchema, signupSchema } from "@/src/lib/zod-schemas/auth";
 import { getTextLink } from "@/src/utils/get-text-link";
 import OTPVerification from "../ui/otp-verification";
 import { useEffect, useState } from "react";

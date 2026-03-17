@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { VerificationPurpose } from "../api/auth-requests";
+import { VerificationPurpose } from "../../api/auth-requests";
 
 export const passwordRequirements = [
   { regex: /^.{8,20}$/, message: "Between 8 and 20 characters" },
@@ -9,7 +9,7 @@ export const passwordRequirements = [
   { regex: /(?=.*[!@#$%^&*])/, message: "At least 1 special character: @!#$%^&*" },
 ];
 
-let passwordSchema = z.string();
+export let passwordSchema = z.string();
 for (const { regex, message } of passwordRequirements) {
   passwordSchema = passwordSchema.regex(regex, message);
 }
@@ -54,24 +54,6 @@ export const otpSchema = z.object({
     .regex(/^[a-zA-Z0-9]+$/, "Code must be alphanumeric"),
 });
 
-export const forgotPasswordSchema = z.object({
-  email: z.email("Invalid email address").max(254, "Email can be at most 254 characters"),
-});
-
-export const passwordResetSchema = z
-  .object({
-    uid: z.string().min(1),
-    token: z.string().min(1),
-    newPassword: passwordSchema,
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
 export type SignupSchema = z.infer<typeof signupSchema>;
 export type SigninSchema = z.infer<typeof signinSchema>;
-export type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>;
 export type OtpSchema = z.infer<typeof otpSchema>;
-export type PasswordResetSchema = z.infer<typeof passwordResetSchema>;

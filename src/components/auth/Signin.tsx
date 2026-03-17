@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { FormControl, FormField, FormItem } from "../ui/form";
-import { SigninSchema, signinSchema } from "@/src/lib/auth-schemas";
+import { SigninSchema, signinSchema } from "@/src/lib/zod-schemas/auth";
 import { getTextLink } from "@/src/utils/get-text-link";
 import AuthForm from "./AuthForm";
 import { useRouter } from "next/navigation";

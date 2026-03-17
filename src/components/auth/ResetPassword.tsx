@@ -8,7 +8,7 @@ import {
   ForgotPasswordSchema,
   PasswordResetSchema,
   passwordResetSchema,
-} from "@/src/lib/auth-schemas";
+} from "@/src/lib/zod-schemas/user";
 import AuthForm from "./AuthForm";
 import { useState } from "react";
 import OTPVerification from "../ui/otp-verification";

@@ -1,4 +1,4 @@
-import { OtpSchema, SigninSchema, SignupSchema } from "../lib/auth-schemas";
+import { OtpSchema, SigninSchema, SignupSchema } from "../lib/zod-schemas/auth";
 import { makeApiRequest } from "./make-api-request";
 
 export async function sendSignupRequest(data: SignupSchema) {

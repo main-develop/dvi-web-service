@@ -1,4 +1,4 @@
-import { ForgotPasswordSchema, PasswordResetSchema } from "@/src/lib/auth-schemas";
+import { ForgotPasswordSchema, PasswordResetSchema } from "@/src/lib/zod-schemas/user";
 import { makeApiRequest } from "./make-api-request";
 
 export async function sendForgotPasswordRequest(data: ForgotPasswordSchema) {
