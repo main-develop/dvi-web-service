@@ -1,17 +1,17 @@
 "use client";
 
 import { BadgeCheck } from "lucide-react";
-import { Card } from "./ui/card";
-import { cn } from "../lib/utils";
-import { Button } from "./ui/button";
-import { BackgroundGridPattern } from "./ui/background-grid-pattern";
-import { Badge } from "./ui/badge";
-import { PricingTab } from "./ui/pricing-tabs";
+import { Card } from "../ui/card";
+import { cn } from "@/src/lib/utils";
+import { Button } from "../ui/button";
+import { BackgroundGridPattern } from "../ui/background-grid-pattern";
+import { Badge } from "../ui/badge";
+import { PricingTab } from "../ui/pricing-tabs";
 import { useState } from "react";
 import NumberFlow, { continuous } from "@number-flow/react";
 import { AnimatePresence, motion } from "motion/react";
-import * as motions from "../utils/motion-variants";
-import { GlowingBorderEffect } from "./ui/glowing-border-effect";
+import * as motions from "@/src/utils/get-motion-variants";
+import { GlowingBorderEffect } from "../ui/glowing-border-effect";
 
 interface PricingTierProps {
   id: string;
@@ -232,12 +232,7 @@ export const PricingSection = ({
                   </ul>
                 </div>
 
-                <Button
-                  className={cn(
-                    "sm:bg-primary/90 hover:bg-primary/80",
-                    "cursor-pointer tracking-tight transition-all",
-                  )}
-                >
+                <Button className={cn("cursor-pointer tracking-tight transition-all duration-400")}>
                   {tier.cta}
                 </Button>
               </Card>

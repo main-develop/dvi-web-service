@@ -6,14 +6,14 @@ interface NavLinkProps {
   href: string;
 }
 
-export const getNavLinks = (navLinks: NavLinkProps[], style: string = "") =>
+export const getNavLinks = (navLinks: NavLinkProps[], className: string = "") =>
   navLinks.map((link) => (
     <Link
       key={link.title}
       href={link.href}
       className={cn(
-        "text-primary-foreground hover:text-primary/90 tracking-[0.04rem] uppercase transition",
-        style,
+        "text-primary-foreground hover:text-primary/90 tracking-[0.04rem] uppercase transition-all duration-400",
+        className,
       )}
     >
       {link.title}

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { getNavLinks } from "../utils/get-nav-links";
+import { getNavLinks } from "@/src/utils/get-nav-links";
 
 const socials = [
   {
@@ -65,7 +65,7 @@ export default function Footer() {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary-foreground hover:text-primary/90 transition"
+                className="text-primary-foreground hover:text-primary/90 transition-all duration-400"
               >
                 {icon}
               </a>

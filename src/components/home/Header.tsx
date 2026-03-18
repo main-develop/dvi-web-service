@@ -1,13 +1,14 @@
 "use client";
 
-import { Button } from "./ui/button";
-import { Logo } from "./ui/logo";
+import { Button } from "../ui/button";
+import { Logo } from "../ui/logo";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import { cn } from "../lib/utils";
+import { usePathname, useRouter } from "next/navigation";
+import { cn } from "@/src/lib/utils";
 import { createPortal } from "react-dom";
-import { getNavLinks } from "../utils/get-nav-links";
+import { getNavLinks } from "@/src/utils/get-nav-links";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 const navLinks = [
   { href: "/about", title: "ABOUT" },
@@ -17,13 +18,14 @@ const navLinks = [
   { href: "/help", title: "HELP" },
 ];
 
-const getSignButtons = (style: string = "") =>
-  ["SIGN IN", "SIGN UP"].map((label) => (
+const getSignButtons = (router: AppRouterInstance, className: string = "") =>
+  ["sign-in", "sign-up"].map((href) => (
     <Button
-      key={label}
-      className={`${style} sm:bg-primary/90 hover:bg-primary/80 tracking-tight`}
+      key={href}
+      onClick={() => router.push(href)}
+      className={`${className} tracking-tight transition-all duration-400`}
     >
-      {label}
+      {href.replace("-", " ")}
     </Button>
   ));
 
@@ -42,6 +44,7 @@ const svgPathStyle = [
 export default function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -69,54 +72,54 @@ export default function Header() {
       className={cn("sticky top-0 z-50 bg-transparent px-7 py-3", {
         "shadow-md backdrop-blur-sm": isScrolled || isMobileMenuOpen,
       })}
-      {...(isHome
-        ? {
-            initial: { opacity: 0, y: -20 },
-            animate: { opacity: 1, y: 0 },
-            transition: { duration: 0.6, delay: 0.2 },
-          }
-        : {})}
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.2 }}
     >
       <nav className="mx-auto flex max-w-full items-center">
-        <div className="flex items-center justify-start">
+        <div className="flex h-[34px] items-center justify-start">
           <Logo />
         </div>
-        <div className="hidden flex-1 md:flex">
-          <ul className="flex flex-1 items-center justify-center gap-7 px-6">
-            {getNavLinks(navLinks, "text-sm font-semibold")}
-          </ul>
-          <div className="flex justify-end gap-2">{getSignButtons()}</div>
-        </div>
-        <div className="flex flex-1 items-center justify-end md:hidden">
-          <Button
-            className="group scale-170"
-            variant="ghost"
-            onClick={() => setIsMobileMenuOpen((prevState) => !prevState)}
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-menu"
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-          >
-            <svg
-              width={16}
-              height={16}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {svgPathStyle.map((style, index) => (
-                <path
-                  key={`path-${index}`}
-                  d="M4 12L20 12"
-                  className={`origin-center transition-all duration-300 ${style}`}
-                />
-              ))}
-            </svg>
-          </Button>
-        </div>
+        {isHome && (
+          <>
+            <div className="hidden flex-1 md:flex">
+              <ul className="flex flex-1 items-center justify-center gap-7 px-6">
+                {getNavLinks(navLinks, "text-sm font-semibold")}
+              </ul>
+              <div className="flex justify-end gap-2">{getSignButtons(router)}</div>
+            </div>
+            <div className="flex flex-1 items-center justify-end md:hidden">
+              <Button
+                className="group scale-170"
+                variant="ghost"
+                onClick={() => setIsMobileMenuOpen((prevState) => !prevState)}
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-menu"
+                aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              >
+                <svg
+                  width={16}
+                  height={16}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {svgPathStyle.map((style, index) => (
+                    <path
+                      key={`path-${index}`}
+                      d="M4 12L20 12"
+                      className={`origin-center transition-all duration-300 ${style}`}
+                    />
+                  ))}
+                </svg>
+              </Button>
+            </div>
+          </>
+        )}
       </nav>
       {typeof window === "undefined"
         ? null
@@ -138,7 +141,7 @@ export default function Header() {
                   <ul className="flex flex-col items-start gap-y-4">
                     {getNavLinks(navLinks, "text-lg font-semibold")}
                   </ul>
-                  <div className="flex flex-col gap-2 pt-8">{getSignButtons("h-10")}</div>
+                  <div className="flex flex-col gap-2 pt-8">{getSignButtons(router, "h-10")}</div>
                 </motion.div>
               )}
             </AnimatePresence>,

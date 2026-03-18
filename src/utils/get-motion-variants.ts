@@ -30,16 +30,16 @@ export const getContainerVariants = (): Variants => ({
   },
 });
 
-export const getItemVariants = (hiddenY: number = 15): Variants => ({
+export const getItemVariants = (hiddenY: number = 15, blur: number = 4, transition: number = 0.6): Variants => ({
   hidden: {
     opacity: 0,
-    filter: "blur(4px)",
+    filter: `blur(${blur}px)`,
     y: hiddenY,
   },
   visible: {
     opacity: 1,
     filter: "blur(0px)",
     y: 0,
-    transition: { duration: 0.6 },
+    transition: { duration: transition },
   },
 });
