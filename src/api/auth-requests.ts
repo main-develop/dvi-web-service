@@ -17,7 +17,11 @@ export async function sendSigninRequest(data: SigninSchema) {
     password: data.password,
     remember_me: data.rememberMe,
   };
-  return makeApiRequest("auth/login/", "POST", payload);
+  return makeApiRequest<null>("auth/login/", "POST", payload);
+}
+
+export async function sendSignoutRequest() {
+  return makeApiRequest("auth/logout/", "POST", null);
 }
 
 export const VerificationPurpose = {

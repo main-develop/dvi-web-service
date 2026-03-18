@@ -3,6 +3,7 @@ import "./globals.css";
 import ddin from "./fonts";
 import { SmoothScrollProvider } from "../components/ui/smooth-scroll-provider";
 import { Toaster } from "../components/ui/sonner";
+import { AuthProvider } from "../context/AuthContext";
 
 export const metadata: Metadata = {
   title: "DVI",
@@ -17,7 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={ddin.variable}>
       <body className="dark flex min-h-screen flex-col antialiased">
-        <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        <AuthProvider>
+          <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        </AuthProvider>
         <Toaster />
       </body>
     </html>

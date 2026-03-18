@@ -1,6 +1,16 @@
 import { ForgotPasswordSchema, PasswordResetSchema } from "@/src/lib/zod-schemas/user";
 import { makeApiRequest } from "./make-api-request";
 
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+}
+
+export async function getUser() {
+  return makeApiRequest<User>("users/me/", "GET", null);
+}
+
 export async function sendForgotPasswordRequest(data: ForgotPasswordSchema) {
   return makeApiRequest("users/password/reset/", "POST", data);
 }

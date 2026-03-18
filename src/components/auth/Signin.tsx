@@ -10,8 +10,8 @@ import { getTextLink } from "@/src/utils/get-text-link";
 import AuthForm from "./AuthForm";
 import { useRouter } from "next/navigation";
 import AuthSection from "./AuthSection";
-import { sendSigninRequest } from "@/src/api/auth-requests";
 import { toast } from "sonner";
+import { useAuth } from "@/src/context/AuthContext";
 
 interface SigninFieldProps {
   name: "usernameOrEmail" | "password";
@@ -25,6 +25,8 @@ const signinFields: SigninFieldProps[] = [
 ];
 
 export default function Signin() {
+  const { signin } = useAuth();
+
   const form = useForm<SigninSchema>({
     resolver: zodResolver(signinSchema),
     defaultValues: { usernameOrEmail: "", password: "", rememberMe: false },
@@ -34,7 +36,7 @@ export default function Signin() {
   const router = useRouter();
 
   const onSubmit = async (data: SigninSchema) => {
-    const response = await sendSigninRequest(data);
+    const response = await signin(data);
 
     if (response.ok) {
       router.push("/dashboard");

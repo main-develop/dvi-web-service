@@ -1,4 +1,4 @@
-type ErrorData = {
+export type ErrorData = {
   type: string;
   errors: Array<{
     code: string;
@@ -7,15 +7,29 @@ type ErrorData = {
   }>;
 };
 
+function getCSRFToken(): string | null {
+  const cookie = document.cookie.split("; ").find((row) => row.startsWith("csrftoken="));
+  return cookie ? cookie.split("=")[1] : null;
+}
+
 export async function makeApiRequest<T = unknown>(
   endpoint: string,
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
   payload: Record<string, unknown> | null = null,
 ): Promise<{ ok: true; data: T } | { ok: false; data: ErrorData }> {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/v1/${endpoint}`, {
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL!}${endpoint}`;
+    const csrfToken = getCSRFToken();
+    const headers: HeadersInit = { "Content-Type": "application/json" };
+
+    if (csrfToken && !["GET", "HEAD", "OPTIONS"].includes(method)) {
+      headers["X-CSRFToken"] = csrfToken;
+    }
+
+    const response = await fetch(url, {
+      headers,
       method: method,
-      headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: payload ? JSON.stringify(payload) : undefined,
     });
     const responseData = await response.json().catch(() => null);
