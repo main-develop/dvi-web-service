@@ -45,7 +45,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signin = async (data: SigninSchema) => {
     const response = await sendSigninRequest(data);
-    await refreshUser();
+    if (response.ok) {
+      await refreshUser();
+    }
 
     return response;
   };
