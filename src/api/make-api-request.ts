@@ -32,6 +32,30 @@ export async function makeApiRequest<T = unknown>(
       credentials: "include",
       body: payload ? JSON.stringify(payload) : undefined,
     });
+
+    if (response.status === 429) {
+      let waitSeconds = 60;
+
+      const retryAfter = response.headers.get("Retry-After");
+      if (retryAfter) {
+        waitSeconds = parseInt(retryAfter, 10) || 60;
+      }
+
+      return {
+        ok: false,
+        data: {
+          type: "rate_limit_exceeded",
+          errors: [
+            {
+              code: "rate_limit",
+              detail: `Too many attempts. Please try again in ${waitSeconds} second${waitSeconds > 1 ? "s" : ""}.`,
+              attr: null,
+            },
+          ],
+        },
+      };
+    }
+
     const responseData = await response.json().catch(() => null);
 
     if (!response.ok) {

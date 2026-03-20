@@ -134,6 +134,7 @@ export default function AuthForm<T extends FieldValues>({
 
           <FormMessage className="!my-[13px]">
             {formRootErrors?.clientError ? formRootErrors.clientError.message : ""}
+            {formRootErrors?.rateLimit ? formRootErrors.rateLimit.message : ""}
           </FormMessage>
 
           <Button

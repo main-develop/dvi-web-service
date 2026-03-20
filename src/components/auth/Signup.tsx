@@ -75,6 +75,8 @@ export default function Signup() {
           form.setError("email", { type: responseType, message: error.detail });
         } else if (error.attr === "username") {
           form.setError("username", { type: responseType, message: error.detail });
+        } else if (responseType === "rate_limit_exceeded") {
+          form.setError("root.rateLimit", { type: responseType, message: error.detail });
         } else {
           toast.warning(error.detail, { id: "server-error" });
         }

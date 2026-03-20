@@ -128,11 +128,13 @@ export default function OTPVerification({
       const responseType = response.data.type;
       const error = response.data.errors[0];
 
-      if (responseType === "server_error") {
-        toast.warning(error.detail, { id: "server-error" });
-      }
       if (error.attr === "otp") {
         form.setError("otp", { type: responseType, message: error.detail });
+      }
+      if (responseType === "rate_limit_exceeded") {
+        form.setError("root.rateLimit", { type: responseType, message: error.detail });
+      } else if (responseType === "server_error") {
+        toast.warning(error.detail, { id: "server-error" });
       }
     }
   };
@@ -145,8 +147,13 @@ export default function OTPVerification({
     const response = await resendVerificationEmailRequest({ email: email, purpose: purpose });
 
     if (!response.ok) {
-      if (response.data.type === "server_error") {
-        toast.warning(response.data.errors[0].detail, { id: "server-error" });
+      const responseType = response.data.type;
+      const message = response.data.errors[0].detail;
+
+      if (responseType === "rate_limit_exceeded") {
+        form.setError("root.rateLimit", { type: responseType, message: message });
+      } else if (responseType === "server_error") {
+        toast.warning(message, { id: "server-error" });
       }
     }
   };
@@ -187,7 +194,11 @@ export default function OTPVerification({
                     </InputOTPGroup>
                   </InputOTP>
                 </FormControl>
-                <FormMessage />
+                <FormMessage>
+                  {form.formState.errors.root?.rateLimit
+                    ? form.formState.errors.root.rateLimit.message
+                    : ""}
+                </FormMessage>
               </FormItem>
             )}
           />

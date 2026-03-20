@@ -74,8 +74,13 @@ export default function ResetPassword() {
 
       router.push("/sign-in");
     } else {
-      if (response.data.type === "server_error") {
-        toast.warning(response.data.errors[0].detail, { id: "server-error" });
+      const responseType = response.data.type;
+      const message = response.data.errors[0].detail;
+
+      if (responseType === "rate_limit_exceeded") {
+        passwordResetForm.setError("root.rateLimit", { type: responseType, message: message });
+      } else if (responseType === "server_error") {
+        toast.warning(message, { id: "server-error" });
       }
     }
   };

@@ -44,11 +44,12 @@ export default function Signin() {
       const responseType = response.data.type;
       const message = response.data.errors[0].detail;
 
-      if (responseType === "server_error") {
-        toast.warning(message, { id: "server-error" });
-      }
-      if (responseType === "client_error") {
+      if (responseType === "rate_limit_exceeded") {
+        form.setError("root.rateLimit", { type: responseType, message: message });
+      } else if (responseType === "client_error") {
         form.setError("root.clientError", { type: responseType, message: message });
+      } else {
+        toast.warning(message, { id: "server-error" });
       }
     }
   };
