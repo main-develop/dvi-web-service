@@ -53,6 +53,8 @@ export default function Header() {
       setIsScrolled(window.scrollY > 0);
     };
 
+    setIsScrolled(window.scrollY > 0);
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -69,7 +71,8 @@ export default function Header() {
 
   return (
     <motion.header
-      className={cn("sticky top-0 z-50 bg-transparent px-7 py-3", {
+      className={cn("sticky top-0 z-50 bg-transparent px-7 py-3",
+        "transition-[box-shadow,backdrop-filter] duration-500 ease-in", {
         "shadow-md backdrop-blur-sm": isScrolled || isMobileMenuOpen,
       })}
       initial={{ opacity: 0, y: -20 }}
