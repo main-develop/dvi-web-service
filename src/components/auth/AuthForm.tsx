@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { motion } from "motion/react";
 import { getItemVariants } from "@/src/utils/get-motion-variants";
 import { useState } from "react";
-import { Check, Eye, EyeOff, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { passwordRequirements } from "@/src/lib/zod-schemas/auth";
 import { Spinner } from "../ui/spinner";
@@ -58,37 +58,21 @@ export default function AuthForm<T extends FieldValues>({
                     <FormControl>
                       <div className="relative">
                         <Input
-                          type={
-                            type === "password" && visibleFields[name as string] ? "text" : type
-                          }
+                          type={type}
                           label={label}
+                          eyeVisibleCondition={visibleFields[name as string]}
+                          onEyeClick={() =>
+                            setVisibleFields((prev) => ({
+                              ...prev,
+                              [name]: !prev[name as string],
+                            }))
+                          }
                           onFocus={
                             showPasswordHints ? () => setFocusedField(name as string) : undefined
                           }
                           {...field}
                           onBlur={() => setFocusedField(null)}
                         />
-
-                        {type === "password" && (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            onMouseDown={(e) => e.preventDefault()}
-                            onClick={() =>
-                              setVisibleFields((prev) => ({
-                                ...prev,
-                                [name]: !prev[name as string],
-                              }))
-                            }
-                            className={cn(
-                              "hover:text-muted-foreground text-muted-foreground/60 absolute",
-                              "inset-y-2.5 right-2 flex size-1 items-center justify-center rounded-none",
-                              "bg-background hover:bg-background transition-all duration-300",
-                            )}
-                          >
-                            {visibleFields[name as string] ? <EyeOff /> : <Eye />}
-                          </Button>
-                        )}
                       </div>
                     </FormControl>
 

@@ -1,4 +1,8 @@
-import { ForgotPasswordSchema, PasswordResetSchema } from "@/src/lib/zod-schemas/user";
+import {
+  DeleteAccountSchema,
+  ForgotPasswordSchema,
+  PasswordResetSchema,
+} from "@/src/lib/zod-schemas/user";
 import { makeApiRequest } from "./make-api-request";
 
 export interface User {
@@ -9,6 +13,10 @@ export interface User {
 
 export async function getUser() {
   return makeApiRequest<User>("users/me/", "GET", null);
+}
+
+export async function sendDeleteAccountRequest(data: DeleteAccountSchema) {
+  return makeApiRequest("users/me/", "DELETE", { current_password: data.password });
 }
 
 export async function sendForgotPasswordRequest(data: ForgotPasswordSchema) {

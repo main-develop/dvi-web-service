@@ -53,7 +53,7 @@ export default function Header() {
       setIsScrolled(window.scrollY > 0);
     };
 
-    setIsScrolled(window.scrollY > 0);
+    handleScroll();
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
