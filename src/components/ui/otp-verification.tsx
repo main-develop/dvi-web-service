@@ -170,7 +170,7 @@ export default function OTPVerification({
       variants={getItemVariants(0, 0, 0.7)}
       initial="hidden"
       animate="visible"
-      className="space-y-8"
+      className="space-y-6"
     >
       <Form {...form}>
         <p className="text-center text-sm">

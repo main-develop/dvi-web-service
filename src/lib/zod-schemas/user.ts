@@ -1,6 +1,14 @@
 import { z } from "zod";
 import { passwordSchema } from "./auth";
 
+export const changeUsernameSchema = z.object({
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(25, "Username must be at most 25 characters")
+    .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
+});
+
 export const deleteAccountSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
@@ -21,6 +29,7 @@ export const passwordResetSchema = z
     path: ["confirmPassword"],
   });
 
+export type ChangeUsernameSchema = z.infer<typeof changeUsernameSchema>;
 export type DeleteAccountSchema = z.infer<typeof deleteAccountSchema>;
 export type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>;
 export type PasswordResetSchema = z.infer<typeof passwordResetSchema>;

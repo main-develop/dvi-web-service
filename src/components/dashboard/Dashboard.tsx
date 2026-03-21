@@ -23,6 +23,7 @@ import { Input } from "../ui/input";
 import { sendDeleteAccountRequest } from "@/src/api/user-requests";
 import { toast } from "sonner";
 import { Spinner } from "../ui/spinner";
+import ChangeUsernameDialog from "./ChangeUsernameDialog";
 
 export default function Dashboard() {
   const { user, signout } = useAuth();
@@ -81,15 +82,23 @@ export default function Dashboard() {
       </div>
       <div className="flex flex-1 flex-col items-center justify-center">
         <div className="flex min-h-[530px] w-full max-w-[395px] flex-col items-center justify-center gap-8 p-8">
-          <ul className="flex flex-col">
+          <ul className="flex flex-col gap-3">
             <li>
               <b>User ID:</b> {user?.id}
             </li>
-            <li>
-              <b>Email:</b> {user?.email}
+            <li className="flex items-center justify-between">
+              <span className="leading-none">
+                <b>Email:</b> {user?.email}
+              </span>
+              <Button size="sm" className="w-[68px] transition-all duration-300">
+                Update
+              </Button>
             </li>
-            <li>
-              <b>Username:</b> {user?.username}
+            <li className="flex items-center justify-between">
+              <span className="leading-none">
+                <b>Username:</b> {user?.username}
+              </span>
+              <ChangeUsernameDialog />
             </li>
           </ul>
           <Dialog open={dialogOpen} onOpenChange={(open) => onOpenChange(open)}>
@@ -103,10 +112,10 @@ export default function Dashboard() {
               showCloseButton={false}
               onOpenAutoFocus={(e) => e.preventDefault()}
               onInteractOutside={(event) => {
-                successContentVisible ? event.preventDefault() : undefined;
+                successContentVisible && event.preventDefault();
               }}
               onEscapeKeyDown={(event) => {
-                successContentVisible ? event.preventDefault() : undefined;
+                successContentVisible && event.preventDefault();
               }}
             >
               {!successContentVisible ? (

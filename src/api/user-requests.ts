@@ -2,6 +2,7 @@ import {
   DeleteAccountSchema,
   ForgotPasswordSchema,
   PasswordResetSchema,
+  ChangeUsernameSchema,
 } from "@/src/lib/zod-schemas/user";
 import { makeApiRequest } from "./make-api-request";
 
@@ -13,6 +14,10 @@ export interface User {
 
 export async function getUser() {
   return makeApiRequest<User>("users/me/", "GET", null);
+}
+
+export async function sendChangeUsernameRequest(data: ChangeUsernameSchema) {
+  return makeApiRequest("users/me/username/", "POST", { new_username: data.username });
 }
 
 export async function sendDeleteAccountRequest(data: DeleteAccountSchema) {
