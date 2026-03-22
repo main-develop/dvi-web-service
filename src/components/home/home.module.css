@@ -1,5 +1,0 @@
-number-flow-react::part(suffix) {
-	line-height: var(--tw-leading, var(--text-base--line-height));
-	font-size: var(--text-base);
-	color: var(--muted-foreground);
-}

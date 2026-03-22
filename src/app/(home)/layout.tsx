@@ -1,4 +1,3 @@
-import "@/src/components/home/home.module.css";
 import Header from "@/src/components/home/Header";
 import Footer from "@/src/components/home/Footer";
 

@@ -8,16 +8,17 @@ import { BackgroundGridPattern } from "../ui/background-grid-pattern";
 import { Badge } from "../ui/badge";
 import { PricingTab } from "../ui/pricing-tabs";
 import { useState } from "react";
-import NumberFlow, { continuous } from "@number-flow/react";
 import { AnimatePresence, motion } from "motion/react";
 import * as motions from "@/src/utils/get-motion-variants";
 import { GlowingBorderEffect } from "../ui/glowing-border-effect";
+import { RollingNumber } from "../ui/rolling-number";
 
 interface PricingTierProps {
   id: string;
   name: string;
   description: string;
   price: Record<string, number | string>;
+  suffix: string;
   features: string[];
   cta: string;
 }
@@ -31,6 +32,7 @@ export const tiers: PricingTierProps[] = [
       monthly: 0,
       yearly: 0,
     },
+    suffix: "/ month",
     features: [
       "No payment credentials required",
       "Limited AI analysis",
@@ -45,9 +47,10 @@ export const tiers: PricingTierProps[] = [
     name: "Pro",
     description: "For advanced enthusiasts",
     price: {
-      monthly: 35,
-      yearly: 25,
+      monthly: 40,
+      yearly: 29,
     },
+    suffix: "/ month",
     features: [
       "Advanced visualizations",
       "Extended AI analysis limits",
@@ -62,9 +65,10 @@ export const tiers: PricingTierProps[] = [
     name: "Business",
     description: "For small companies/startups",
     price: {
-      monthly: 90,
-      yearly: 70,
+      monthly: 99,
+      yearly: 75,
     },
+    suffix: "/ user / month",
     features: [
       "Access to API",
       "24/7 priority support",
@@ -81,6 +85,7 @@ export const tiers: PricingTierProps[] = [
       monthly: "Custom",
       yearly: "Custom",
     },
+    suffix: "",
     features: [
       "Custom quote",
       "Flexible terms",
@@ -197,17 +202,15 @@ export const PricingSection = ({
 
                 <div className="relative h-9">
                   {typeof tier.price[selectedFrequency] === "number" ? (
-                    <NumberFlow
-                      plugins={[continuous]}
+                    <RollingNumber
+                      value={tier.price[selectedFrequency]}
+                      className="text-2xl font-medium"
                       format={{
                         style: "currency",
                         currency: "USD",
                         trailingZeroDisplay: "stripIfInteger",
                       }}
-                      locales="en-US"
-                      value={tier.price[selectedFrequency]}
-                      className="text-2xl font-medium"
-                      suffix={`${tier.id === "business" ? " / user" : ""} / month`}
+                      suffix={tier.suffix}
                     />
                   ) : (
                     <h1 className="text-2xl font-medium">{tier.price[selectedFrequency]}</h1>

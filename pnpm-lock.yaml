@@ -12,8 +12,8 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.72.0(react@19.2.3))
       '@number-flow/react':
-        specifier: ^0.5.12
-        version: 0.5.14(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        specifier: ^0.6.0
+        version: 0.6.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@radix-ui/react-slot':
         specifier: ^1.2.4
         version: 1.2.4(@types/react@19.2.14)(react@19.2.3)
@@ -496,8 +496,8 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
 
-  '@number-flow/react@0.5.14':
-    resolution: {integrity: sha512-FGUqjh/P5/ukr0U0ySwb987M0SbRkrnZq70f0wQFncDbXa3SIib4L+FTr5ngvWwGAW8S6b391eTXcfhErZsw4w==}
+  '@number-flow/react@0.6.0':
+    resolution: {integrity: sha512-77Yfc9+zkV2UDSP8phhZzxJGuwxi/Tt1TikmipL+1r3e9GFKEYDZ1XwInj67NoSt3OnOB0KLvvcl3lfPZgBHVQ==}
     peerDependencies:
       react: ^18 || ^19
       react-dom: ^18 || ^19
@@ -2430,8 +2430,8 @@ packages:
   node-releases@2.0.36:
     resolution: {integrity: sha512-TdC8FSgHz8Mwtw9g5L4gR/Sh9XhSP/0DEkQxfEFXOpiul5IiHgHan2VhYYb6agDSfp4KuvltmGApc8HMgUrIkA==}
 
-  number-flow@0.5.12:
-    resolution: {integrity: sha512-CIs21h2JkfYG4rfgERaUNAk0Cz+Ef14fNJfSCbGGhgRgconQc9b7rcCQfi9SZ36kNjVXmsl2BrzDbjGtEgumAA==}
+  number-flow@0.6.0:
+    resolution: {integrity: sha512-K8flNq2Wqus53vjp/btVo3qXFkagF8dIdYavreBfE7hlvFFG/b1HMGEH6nZL+mlrJ+4lbLP9OmPv3t2rmRkpSQ==}
 
   object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
@@ -3335,10 +3335,10 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
-  '@number-flow/react@0.5.14(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@number-flow/react@0.6.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       esm-env: 1.2.2
-      number-flow: 0.5.12
+      number-flow: 0.6.0
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
 
@@ -5403,7 +5403,7 @@ snapshots:
 
   node-releases@2.0.36: {}
 
-  number-flow@0.5.12:
+  number-flow@0.6.0:
     dependencies:
       esm-env: 1.2.2
 
