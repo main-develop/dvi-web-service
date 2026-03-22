@@ -26,6 +26,7 @@ export async function sendSignoutRequest() {
 
 export const VerificationPurpose = {
   ACCOUNT_ACTIVATION: "account_activation",
+  CHANGE_EMAIL: "change_email",
   RESET_PASSWORD: "reset_password",
 } as const;
 

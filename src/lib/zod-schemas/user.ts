@@ -9,6 +9,11 @@ export const changeUsernameSchema = z.object({
     .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
 });
 
+export const changeEmailSchema = z.object({
+  newEmail: z.email("Invalid email address").max(254, "Email must be at most 254 characters"),
+  currentPassword: z.string().min(1, "Current password is required"),
+});
+
 export const deleteAccountSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
@@ -30,6 +35,7 @@ export const passwordResetSchema = z
   });
 
 export type ChangeUsernameSchema = z.infer<typeof changeUsernameSchema>;
+export type ChangeEmailSchema = z.infer<typeof changeEmailSchema>;
 export type DeleteAccountSchema = z.infer<typeof deleteAccountSchema>;
 export type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>;
 export type PasswordResetSchema = z.infer<typeof passwordResetSchema>;

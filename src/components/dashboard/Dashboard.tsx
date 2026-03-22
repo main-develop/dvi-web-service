@@ -24,6 +24,7 @@ import { sendDeleteAccountRequest } from "@/src/api/user-requests";
 import { toast } from "sonner";
 import { Spinner } from "../ui/spinner";
 import ChangeUsernameDialog from "./ChangeUsernameDialog";
+import ChangeEmailDialog from "./ChangeEmailDialog";
 
 export default function Dashboard() {
   const { user, signout } = useAuth();
@@ -82,7 +83,7 @@ export default function Dashboard() {
       </div>
       <div className="flex flex-1 flex-col items-center justify-center">
         <div className="flex min-h-[530px] w-full max-w-[395px] flex-col items-center justify-center gap-8 p-8">
-          <ul className="flex flex-col gap-3">
+          <ul className="flex w-full max-w-[395px] flex-col gap-3">
             <li>
               <b>User ID:</b> {user?.id}
             </li>
@@ -90,9 +91,7 @@ export default function Dashboard() {
               <span className="leading-none">
                 <b>Email:</b> {user?.email}
               </span>
-              <Button size="sm" className="w-[68px] transition-all duration-300">
-                Update
-              </Button>
+              <ChangeEmailDialog />
             </li>
             <li className="flex items-center justify-between">
               <span className="leading-none">

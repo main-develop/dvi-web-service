@@ -62,7 +62,7 @@ export default function ChangeUsernameDialog() {
   return (
     <Dialog open={dialogOpen} onOpenChange={(open) => onOpenChange(open)}>
       <DialogTrigger asChild>
-        <Button size="sm" className="w-[68px] transition-all duration-300">
+        <Button size="sm" className="w-14 rounded-sm transition-all duration-300">
           Edit
         </Button>
       </DialogTrigger>

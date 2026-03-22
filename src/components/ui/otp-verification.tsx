@@ -21,6 +21,7 @@ import {
 } from "@/src/api/auth-requests";
 import { Spinner } from "./spinner";
 import { toast } from "sonner";
+import { useAuth } from "@/src/context/AuthContext";
 
 function InputOTP({
   className,
@@ -101,6 +102,7 @@ export default function OTPVerification({
   onSuccess,
   onBack,
 }: OTPVerificationProps) {
+  const { user } = useAuth();
   const form = useForm<OtpSchema>({
     resolver: zodResolver(otpSchema),
     defaultValues: { otp: "", email: email, purpose: purpose },
@@ -143,8 +145,10 @@ export default function OTPVerification({
 
   const onResend = async () => {
     setResendCooldown(60);
-
-    const response = await resendVerificationEmailRequest({ email: email, purpose: purpose });
+    const response = await resendVerificationEmailRequest({
+      email: user?.email || "",
+      purpose: purpose,
+    });
 
     if (!response.ok) {
       const responseType = response.data.type;
