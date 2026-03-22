@@ -146,7 +146,7 @@ export default function OTPVerification({
   const onResend = async () => {
     setResendCooldown(60);
     const response = await resendVerificationEmailRequest({
-      email: user?.email || "",
+      email: user?.email || email,
       purpose: purpose,
     });
 

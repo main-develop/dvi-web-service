@@ -38,7 +38,7 @@ export default function ChangeEmailDialog() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
-  const onOpenChange = async (open: boolean) => {
+  const onOpenChange = (open: boolean) => {
     setDialogOpen(open);
     if (!open) {
       setCurrentStep(0);
@@ -66,7 +66,6 @@ export default function ChangeEmailDialog() {
     } else {
       const responseType = response.data.type;
       const error = response.data.errors[0];
-      console.log(error);
 
       if (error.attr === "current_password") {
         form.setError("currentPassword", { type: responseType, message: error.detail });
@@ -93,6 +92,12 @@ export default function ChangeEmailDialog() {
         className={`${currentStep === 1 && "flex items-center justify-center"}`}
         showCloseButton={false}
         onOpenAutoFocus={(e) => e.preventDefault()}
+        onInteractOutside={(event) => {
+          currentStep === 1 && event.preventDefault();
+        }}
+        onEscapeKeyDown={(event) => {
+          currentStep === 1 && event.preventDefault();
+        }}
       >
         {currentStep === 0 && (
           <>
@@ -132,7 +137,7 @@ export default function ChangeEmailDialog() {
                   </DialogClose>
                   <Button
                     type="submit"
-                    className="w-[84px] transition-all duration-300"
+                    className="min-w-[84px] transition-all duration-300"
                     disabled={form.formState.isSubmitting}
                   >
                     {form.formState.isSubmitting ? <Spinner /> : "Confirm"}

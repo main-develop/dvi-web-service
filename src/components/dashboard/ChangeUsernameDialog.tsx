@@ -94,7 +94,7 @@ export default function ChangeUsernameDialog() {
               </DialogClose>
               <Button
                 type="submit"
-                className="w-[84px] transition-all duration-300"
+                className="min-w-[84px] transition-all duration-300"
                 disabled={form.formState.isSubmitting}
               >
                 {form.formState.isSubmitting ? <Spinner /> : "Confirm"}

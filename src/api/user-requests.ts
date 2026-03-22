@@ -4,6 +4,7 @@ import {
   PasswordResetSchema,
   ChangeUsernameSchema,
   ChangeEmailSchema,
+  ChangePasswordSchema,
 } from "@/src/lib/zod-schemas/user";
 import { makeApiRequest } from "./make-api-request";
 
@@ -31,6 +32,15 @@ export async function sendChangeEmailRequest(data: ChangeEmailSchema) {
     current_password: data.currentPassword,
   };
   return makeApiRequest("users/me/email/", "POST", payload);
+}
+
+export async function sendChangePasswordRequest(data: ChangePasswordSchema) {
+  const payload = {
+    new_password: data.newPassword,
+    confirm_password: data.confirmPassword,
+    current_password: data.currentPassword,
+  };
+  return makeApiRequest("users/me/password/", "POST", payload);
 }
 
 export async function sendForgotPasswordRequest(data: ForgotPasswordSchema) {
