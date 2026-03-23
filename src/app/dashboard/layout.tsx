@@ -1,5 +1,3 @@
-import "@/src/components/home/home.module.css";
-
 export default function DashboardLayout({
   children,
 }: Readonly<{

@@ -109,7 +109,7 @@ export const PricingSection = ({
   const [selectedFrequency, setSelectedFrequency] = useState(frequencies[0]);
 
   return (
-    <div className="relative flex px-5 pb-20 sm:flex-row sm:px-22">
+    <div className="relative flex px-5 pb-20 md:px-10 lg:px-22">
       <div className="fade-bottom-mask absolute inset-0">
         <BackgroundGridPattern squares={backgroundGridSquares} />
       </div>
@@ -123,13 +123,16 @@ export const PricingSection = ({
       >
         <div className="flex flex-col items-center justify-center gap-5 rounded-md">
           <motion.h2
-            className="matrix-text text-3xl font-bold tracking-[0.04rem] uppercase sm:text-4xl"
+            className="matrix-text text-2xl font-bold tracking-[0.04rem] uppercase md:text-3xl lg:text-4xl"
             variants={itemVariants}
           >
             Choose your plan
           </motion.h2>
 
-          <motion.p variants={itemVariants} className="text-center sm:w-2xl">
+          <motion.p
+            variants={itemVariants}
+            className="max-w-md text-center text-base md:max-w-xl lg:max-w-2xl"
+          >
             Check out our Individual, Business, and Enterprise plans, available on a monthly and
             annual subscription basis. Choose the one that suits you best.
           </motion.p>
@@ -138,7 +141,7 @@ export const PricingSection = ({
             variants={itemVariants}
             className="bg-background border-muted mx-auto flex w-fit rounded-md border-2 p-1"
           >
-            <GlowingBorderEffect className="hidden sm:block" />
+            <GlowingBorderEffect className="hidden lg:block" />
 
             {frequencies.map((freq) => (
               <PricingTab
@@ -151,7 +154,7 @@ export const PricingSection = ({
           </motion.div>
         </div>
 
-        <div className="flex w-full flex-col items-center justify-center gap-6 sm:flex-row">
+        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:flex lg:flex-row lg:items-center lg:justify-center lg:gap-6">
           {tiers.map((tier, index) => (
             <motion.div
               key={tier.id}
@@ -159,15 +162,15 @@ export const PricingSection = ({
               whileInView={motions.getItemAnimate()}
               transition={motions.getItemTransition(index)}
               viewport={{ once: true }}
-              className="w-full sm:w-auto"
+              className="w-full lg:w-auto"
             >
               <Card
                 className={cn(
-                  "bg-background text-foreground border-muted relative flex h-auto w-auto",
-                  "flex-col gap-6 border-2 p-6 sm:h-[480px] sm:w-70",
+                  "bg-background text-foreground border-muted relative flex h-full w-full",
+                  "flex-col gap-4 border-2 p-5 md:gap-5 md:p-6 lg:h-[480px] lg:w-70 lg:gap-6",
                 )}
               >
-                <GlowingBorderEffect className="hidden sm:block" />
+                <GlowingBorderEffect />
 
                 <div className="flex flex-row justify-between">
                   <h2 className="flex items-center gap-3 text-lg font-medium uppercase">

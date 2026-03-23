@@ -71,13 +71,13 @@ export const OverviewSection = ({
   return (
     <div
       ref={ref}
-      className="relative flex-col sm:flex-row"
+      className="relative flex-col lg:flex-row"
       style={{ height: `calc(40rem * ${cardLength})` }}
     >
       <motion.div
         className={cn(
-          "sticky top-0 flex h-screen flex-col gap-10 rounded-md",
-          "px-5 sm:flex-row sm:items-center sm:justify-between sm:px-22",
+          "sticky top-0 flex h-screen flex-col gap-6 rounded-md",
+          "px-5 md:gap-8 md:px-10 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:px-22",
         )}
       >
         <div className="fade-top-mask absolute inset-0 size-full">
@@ -86,8 +86,8 @@ export const OverviewSection = ({
 
         <div
           className={cn(
-            "relative flex h-[50%] w-full items-end",
-            "pb-4 sm:h-full sm:flex-1 sm:items-center sm:pb-0",
+            "relative flex h-[45%] w-full items-end",
+            "pb-4 md:h-[40%] lg:h-full lg:flex-1 lg:items-center lg:pb-0",
           )}
         >
           {content.map((item, index) => (
@@ -104,30 +104,30 @@ export const OverviewSection = ({
               }}
               className={cn(
                 "absolute inset-x-0 bottom-0 flex flex-col",
-                "justify-end text-start sm:inset-0 sm:justify-center",
+                "justify-end text-start lg:inset-0 lg:justify-center",
               )}
             >
-              <h2 className="matrix-text text-3xl font-bold tracking-[0.04rem] sm:text-4xl">
+              <h2 className="matrix-text text-2xl font-bold tracking-[0.04rem] md:text-3xl lg:text-4xl">
                 {item.title}
               </h2>
 
-              <p className="mt-4">{item.description}</p>
+              <p className="mt-3 text-base md:mt-4">{item.description}</p>
             </motion.div>
           ))}
         </div>
 
         <div
           className={cn(
-            "flex h-[50%] w-full shrink-0 items-start justify-center",
-            "overflow-hidden select-none sm:h-auto sm:w-auto sm:items-center",
+            "flex h-[55%] w-full shrink-0 items-start justify-center",
+            "overflow-hidden select-none md:h-[60%] lg:h-auto lg:w-auto lg:items-center",
           )}
         >
           <motion.img
             key={activeCard}
             src={content[activeCard].image}
             className={cn(
-              "max-h-full w-full max-w-[380px] object-contain",
-              "sm:max-h-none sm:w-[750px] sm:max-w-none sm:object-cover",
+              "max-h-full w-full max-w-[370px] object-contain",
+              "md:max-w-[500px] lg:max-h-none lg:w-[750px] lg:max-w-none lg:object-cover",
             )}
             alt="linear board demo"
             initial={getItemInitial(0, 6, 30)}

@@ -19,12 +19,12 @@ const defaultTabs: TabConfig[] = [
   {
     label: "Desktop",
     image: "/desktop-mockup.png",
-    width: "sm:w-[640px] w-[380px]",
+    width: "w-full max-w-[360px] md:max-w-[480px] lg:max-w-[640px]",
   },
   {
     label: "Mobile",
     image: "/mobile-mockup.png",
-    width: "sm:w-[400px] w-[240px]",
+    width: "w-full max-w-[210px] md:max-w-[300px] lg:max-w-[400px]",
   },
 ];
 
@@ -58,14 +58,14 @@ export default function MockupTabs({ tabs = defaultTabs }: MockupTabsProps) {
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div className="flex min-h-[80px] w-full items-end justify-center select-none sm:min-h-[400px]">
+    <div className="flex w-full flex-col items-center gap-2">
+      <div className="relative flex h-[200px] w-full items-end justify-center select-none md:h-[320px] lg:h-[420px]">
         <AnimatePresence mode="wait">
           <motion.img
             key={activeIndex}
             src={tabs[activeIndex].image}
             alt={`${tabs[activeIndex].label} mockup`}
-            className={`absolute object-cover ${tabs[activeIndex].width ?? ""}`}
+            className={`absolute bottom-0 object-contain ${tabs[activeIndex].width ?? ""}`}
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}

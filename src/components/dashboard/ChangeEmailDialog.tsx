@@ -41,7 +41,7 @@ export default function ChangeEmailDialog() {
   const onOpenChange = (open: boolean) => {
     setDialogOpen(open);
     if (!open) {
-      setCurrentStep(0);
+      setTimeout(() => setCurrentStep(0), 1000);
       form.reset();
     }
   };
