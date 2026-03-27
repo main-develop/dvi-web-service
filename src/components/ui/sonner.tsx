@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/src/lib/utils";
 import {
   CircleCheckIcon,
   InfoIcon,
@@ -36,7 +37,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }
       toastOptions={{
         classNames: {
-          toast: "!rounded-md !p-3 !w-max !border-2 !mt-8",
+          toast: cn(
+            "!flex !items-center !justify-center !min-w-fit md:!w-max",
+            "!rounded-md !p-3 !border-2 !mt-12 md:!mt-10",
+          ),
           warning: "!bg-orange-400/10 !text-orange-400/80 !border-orange-400/30",
           success: "!bg-matrix/10 !text-matrix-80 !border-matrix/30",
         },
