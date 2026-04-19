@@ -24,6 +24,8 @@ import { passwordRequirements } from "@/src/lib/zod-schemas/auth";
 import { motion } from "motion/react";
 import { getItemVariants } from "@/src/utils/get-motion-variants";
 import { useAuth } from "@/src/context/AuthContext";
+import { ZxcvbnResult } from "@zxcvbn-ts/core";
+import { passwordResult, ZxcvbnStrength } from "@/src/utils/zxcvbn-strength";
 
 interface ChangePasswordFieldProps {
   name: "newPassword" | "confirmPassword" | "currentPassword";
@@ -34,7 +36,7 @@ interface ChangePasswordFieldProps {
 
 const formFields: ChangePasswordFieldProps[] = [
   { name: "newPassword", type: "password", label: "New Password", showHints: true },
-  { name: "confirmPassword", type: "password", label: "Confirm Password", showHints: true },
+  { name: "confirmPassword", type: "password", label: "Confirm Password", showHints: false },
   { name: "currentPassword", type: "password", label: "Current Password", showHints: false },
 ];
 
@@ -59,7 +61,22 @@ export default function ChangePasswordDialog() {
   });
   const formRootErrors = form.formState.errors.root;
 
+  const watchedPassword = form.watch("newPassword");
+
+  const watchedPasswordResult: ZxcvbnResult | null = watchedPassword
+    ? passwordResult(watchedPassword)
+    : null;
+
   const onSubmit = async (data: ChangePasswordSchema) => {
+    if (watchedPassword && watchedPasswordResult && watchedPasswordResult?.score <= 1) {
+      form.setError("newPassword", {
+        type: "custom",
+        message: "Password is too weak",
+      });
+      form.setFocus("newPassword");
+      return;
+    }
+
     const response = await sendChangePasswordRequest(data);
 
     if (response.ok) {
@@ -137,25 +154,28 @@ export default function ChangePasswordDialog() {
                                 : "grid-rows-[0fr] opacity-0",
                             )}
                           >
-                            <ul className="space-y-1 overflow-hidden text-sm">
-                              {passwordRequirements.map(({ message, regex }, id) => {
-                                const isMet = regex.test(field.value);
+                            <div className="overflow-hidden">
+                              <ZxcvbnStrength password={field.value as string} />
+                              <ul className="space-y-1 text-sm">
+                                {passwordRequirements.map(({ message, regex }, id) => {
+                                  const isMet = regex.test(field.value);
 
-                                return (
-                                  <li
-                                    key={id}
-                                    className={cn(
-                                      "flex items-center gap-2 transition-colors duration-400",
-                                      isMet ? "text-matrix/70" : "text-muted-foreground/60",
-                                    )}
-                                  >
-                                    {isMet ? <Check size={15} /> : <X size={15} />}
+                                  return (
+                                    <li
+                                      key={id}
+                                      className={cn(
+                                        "flex items-center gap-2 transition-colors duration-400",
+                                        isMet ? "text-matrix/70" : "text-muted-foreground/60",
+                                      )}
+                                    >
+                                      {isMet ? <Check size={15} /> : <X size={15} />}
 
-                                    <span>{message}</span>
-                                  </li>
-                                );
-                              })}
-                            </ul>
+                                      <span>{message}</span>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            </div>
                           </div>
                         ) : (
                           <FormMessage>
