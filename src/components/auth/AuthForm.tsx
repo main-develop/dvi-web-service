@@ -150,7 +150,8 @@ export default function AuthForm<T extends FieldValues>({
                               );
                             })}
                           </ul>
-                          {form.formState.errors.password && <FormMessage />}
+                          {(form.formState.errors.password ||
+                            form.formState.errors.newPassword) && <FormMessage />}
                         </div>
                       </div>
                     ) : (
