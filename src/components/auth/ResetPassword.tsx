@@ -52,12 +52,6 @@ export default function ResetPassword() {
       if (response.data.type === "server_error") {
         toast.warning(response.data.errors[0].detail, { id: "server-error" });
       }
-      response.data.errors.forEach((error) => {
-        if (error.attr === "new_password") {
-          passwordResetForm.setError("newPassword", { type: "custom", message: error.detail });
-          passwordResetForm.setFocus("newPassword");
-        }
-      });
     }
   };
 
@@ -80,6 +74,13 @@ export default function ResetPassword() {
 
       router.push("/sign-in");
     } else {
+      response.data.errors.forEach((error) => {
+        if (error.attr === "new_password") {
+          passwordResetForm.setError("newPassword", { type: "custom", message: error.detail });
+          passwordResetForm.setFocus("newPassword");
+        }
+      });
+
       const responseType = response.data.type;
       const message = response.data.errors[0].detail;
 
