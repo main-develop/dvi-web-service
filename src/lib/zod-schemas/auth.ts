@@ -2,17 +2,16 @@ import { z } from "zod";
 import { VerificationPurpose } from "../../api/auth-requests";
 
 export const passwordRequirements = [
-  { regex: /^.{8,20}$/, message: "Between 8 and 20 characters" },
-  { regex: /(?=.*[a-z])/, message: "At least 1 lowercase letter" },
-  { regex: /(?=.*[A-Z])/, message: "At least 1 uppercase letter" },
-  { regex: /(?=.*\d)/, message: "At least 1 number" },
-  { regex: /(?=.*[!@#$%^&*])/, message: "At least 1 special character: @!#$%^&*" },
+  {
+    regex: /^.{8,64}$/,
+    message: "Between 8 and 64 characters",
+  },
 ];
 
-export let passwordSchema = z.string();
-for (const { regex, message } of passwordRequirements) {
-  passwordSchema = passwordSchema.regex(regex, message);
-}
+export const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters")
+  .max(64, "Password must be at most 64 characters");
 
 export const signupSchema = z
   .object({
@@ -40,8 +39,8 @@ export const signinSchema = z.object({
     .max(254, "This field can be at most 254 characters"),
   password: z
     .string()
-    .min(1, "Password is required")
-    .max(20, "Password can be at most 20 characters"),
+    .min(8, "Password must be at least 8 characters")
+    .max(64, "Password must be at most 64 characters"),
   rememberMe: z.boolean().optional(),
 });
 

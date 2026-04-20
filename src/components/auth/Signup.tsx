@@ -75,6 +75,9 @@ export default function Signup() {
           form.setError("email", { type: responseType, message: error.detail });
         } else if (error.attr === "username") {
           form.setError("username", { type: responseType, message: error.detail });
+        } else if (error.attr === "password") {
+          form.setError("password", { type: responseType, message: error.detail });
+          form.setFocus("password");
         } else if (responseType === "rate_limit_exceeded") {
           form.setError("root.rateLimit", { type: responseType, message: error.detail });
         } else {
