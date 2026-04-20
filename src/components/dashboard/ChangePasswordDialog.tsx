@@ -88,7 +88,7 @@ export default function ChangePasswordDialog() {
 
       if (error.attr === "current_password") {
         form.setError("currentPassword", { type: responseType, message: error.detail });
-      } else if (error.attr === "newPassword") {
+      } else if (error.attr === "new_password") {
         form.setError("newPassword", { type: responseType, message: error.detail });
         form.setFocus("newPassword");
       }

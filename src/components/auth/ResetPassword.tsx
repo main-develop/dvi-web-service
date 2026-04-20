@@ -53,7 +53,7 @@ export default function ResetPassword() {
         toast.warning(response.data.errors[0].detail, { id: "server-error" });
       }
       response.data.errors.forEach((error) => {
-        if (error.attr === "password") {
+        if (error.attr === "new_password") {
           passwordResetForm.setError("newPassword", { type: "custom", message: error.detail });
           passwordResetForm.setFocus("newPassword");
         }
