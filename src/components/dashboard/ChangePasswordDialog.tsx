@@ -88,6 +88,9 @@ export default function ChangePasswordDialog() {
 
       if (error.attr === "current_password") {
         form.setError("currentPassword", { type: responseType, message: error.detail });
+      } else if (error.attr === "newPassword") {
+        form.setError("newPassword", { type: responseType, message: error.detail });
+        form.setFocus("newPassword");
       }
 
       if (responseType === "rate_limit_exceeded") {
@@ -165,7 +168,7 @@ export default function ChangePasswordDialog() {
                                       key={id}
                                       className={cn(
                                         "flex items-center gap-2 transition-colors duration-400",
-                                        isMet ? "text-matrix/70" : "text-muted-foreground/60",
+                                        isMet ? "text-matrix/70" : "text-destructive",
                                       )}
                                     >
                                       {isMet ? <Check size={15} /> : <X size={15} />}
@@ -175,6 +178,7 @@ export default function ChangePasswordDialog() {
                                   );
                                 })}
                               </ul>
+                              {form.formState.errors.newPassword && <FormMessage />}
                             </div>
                           </div>
                         ) : (
