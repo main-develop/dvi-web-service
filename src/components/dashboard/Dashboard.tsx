@@ -1,213 +1,109 @@
 "use client";
 
-import { motion } from "motion/react";
-import { Button } from "../ui/button";
-import { useAuth } from "@/src/context/AuthContext";
 import { getItemVariants } from "@/src/utils/get-motion-variants";
-import { useState } from "react";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
-import { useForm } from "react-hook-form";
-import { deleteAccountSchema, DeleteAccountSchema } from "@/src/lib/zod-schemas/user";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
+import { HelpCircle, LogOut, Search, Settings, User } from "lucide-react";
+import { motion } from "motion/react";
 import { Input } from "../ui/input";
-import { sendDeleteAccountRequest } from "@/src/api/user-requests";
-import { toast } from "sonner";
-import { Spinner } from "../ui/spinner";
-import ChangeUsernameDialog from "./ChangeUsernameDialog";
-import ChangeEmailDialog from "./ChangeEmailDialog";
-import ChangePasswordDialog from "./ChangePasswordDialog";
-import { Logo } from "../ui/logo";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import Link from "next/link";
+import { useAuth } from "@/src/context/AuthContext";
+import { cn } from "@/src/lib/utils";
+import { SidebarTrigger, useSidebar } from "../ui/sidebar";
+import { navItemBase } from "../ui/app-sidebar";
+
+const userMenuNav = [
+  {
+    title: "Account",
+    href: "/settings/account",
+    icon: <User />,
+  },
+  {
+    title: "Settings",
+    href: "/settings",
+    icon: <Settings />,
+  },
+  {
+    title: "Help",
+    href: "/help",
+    icon: <HelpCircle />,
+  },
+];
+
+const navItemDropdown = `${navItemBase} tracking-[0.02rem] w-full`;
 
 export default function Dashboard() {
   const { user, signout } = useAuth();
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [successContentVisible, setSuccessContentVisible] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  const onOpenChange = (open: boolean) => {
-    setDialogOpen(open);
-    if (!open) {
-      form.reset({ password: "" });
-      setPasswordVisible(false);
-    }
-  };
-
-  const form = useForm<DeleteAccountSchema>({
-    resolver: zodResolver(deleteAccountSchema),
-    defaultValues: { password: "" },
-    shouldFocusError: false,
-  });
-  const formRootErrors = form.formState.errors.root;
-
-  const onSubmit = async (data: DeleteAccountSchema) => {
-    const response = await sendDeleteAccountRequest(data);
-
-    if (response.ok) {
-      setSuccessContentVisible(true);
-      setTimeout(() => signout(), 6000);
-    } else {
-      const responseType = response.data.type;
-      const error = response.data.errors[0];
-
-      if (error.attr === "current_password") {
-        form.setError("password", { type: responseType, message: error.detail });
-      }
-
-      if (responseType === "rate_limit_exceeded") {
-        form.setError("root.rateLimit", { type: responseType, message: error.detail });
-      } else if (responseType === "server_error") {
-        toast.warning(error.detail, { id: "server-error" });
-      }
-    }
-  };
+  const { isMobile } = useSidebar();
 
   return (
     <motion.div
       variants={getItemVariants(0, 0, 0.7)}
       initial="hidden"
       animate="visible"
-      className="flex flex-col px-7 py-2"
+      className="flex flex-col"
     >
-      <div className="flex items-center justify-between">
-        <Logo />
-        <Button className="tracking-tight transition-all duration-400" onClick={() => signout()}>
-          Sign out
-        </Button>
-      </div>
-      <div className="flex flex-1 flex-col items-center justify-center">
-        <div className="flex min-h-[530px] w-full max-w-[395px] flex-col items-center justify-center gap-8 p-8">
-          <ul className="flex w-full max-w-[395px] flex-col gap-3">
-            <li className="flex items-center justify-between">
-              <span className="leading-none">
-                <b>User ID:</b> {user?.id}
-              </span>
-            </li>
-            <li className="flex items-center justify-between">
-              <span className="leading-none">
-                <b>Email:</b> {user?.email}
-              </span>
-              <ChangeEmailDialog />
-            </li>
-            <li className="flex items-center justify-between">
-              <span className="leading-none">
-                <b>Username:</b> {user?.username}
-              </span>
-              <ChangeUsernameDialog />
-            </li>
-          </ul>
-          <div className="flex w-full flex-col gap-3">
-            <ChangePasswordDialog />
-            <Dialog open={dialogOpen} onOpenChange={(open) => onOpenChange(open)}>
-              <DialogTrigger asChild>
-                <Button variant="destructive" className="w-full transition-all duration-300">
-                  Delete account
-                </Button>
-              </DialogTrigger>
-              <DialogContent
-                className="sm:max-w-lg"
-                showCloseButton={false}
-                onOpenAutoFocus={(e) => e.preventDefault()}
-                onInteractOutside={(event) => {
-                  successContentVisible && event.preventDefault();
-                }}
-                onEscapeKeyDown={(event) => {
-                  successContentVisible && event.preventDefault();
-                }}
-              >
-                {!successContentVisible ? (
-                  <>
-                    <DialogHeader>
-                      <DialogTitle>Start account deletion proccess?</DialogTitle>
-                      <DialogDescription>
-                        After 24 hours from the time you submit this request, your account and all
-                        associated data will be <b>irreversibly</b> deleted.
-                        <br />
-                        You can cancel the deletion process by signing back into your account.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <Form {...form}>
-                      <form className="mt-4" noValidate onSubmit={form.handleSubmit(onSubmit)}>
-                        <FormField
-                          control={form.control}
-                          name="password"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  type="password"
-                                  label="Password"
-                                  eyeVisibleCondition={passwordVisible}
-                                  onEyeClick={() => setPasswordVisible((prev) => !prev)}
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage>
-                                {formRootErrors?.rateLimit ? formRootErrors?.rateLimit.message : ""}
-                              </FormMessage>
-                            </FormItem>
-                          )}
-                        />
-                        <DialogFooter className="mt-3">
-                          <DialogClose asChild>
-                            <Button variant="outline" className="transition-all duration-300">
-                              Cancel
-                            </Button>
-                          </DialogClose>
-                          <Button
-                            type="submit"
-                            variant="destructive"
-                            className="min-w-[84px] transition-all duration-300"
-                            disabled={form.formState.isSubmitting}
-                          >
-                            {form.formState.isSubmitting ? <Spinner /> : "Confirm"}
-                          </Button>
-                        </DialogFooter>
-                      </form>
-                    </Form>
-                  </>
-                ) : (
-                  <motion.div
-                    variants={getItemVariants(0, 0, 0.7)}
-                    initial="hidden"
-                    animate="visible"
-                  >
-                    <div className="bg-matrix/15 mx-auto flex h-12 w-12 items-center justify-center rounded-full">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="text-matrix-80 h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <DialogHeader className="mt-5 flex items-center justify-center">
-                      <DialogTitle>The account deletion process has begun</DialogTitle>
-                      <DialogDescription className="text-center">
-                        You will be redirected to the sign in page in a few seconds.
-                      </DialogDescription>
-                    </DialogHeader>
-                  </motion.div>
+      <header className="flex h-13 items-center px-6">
+        <div className="flex w-full items-center justify-between gap-4">
+          <div className="flex w-full items-center gap-4 sm:w-auto">
+            {isMobile && <SidebarTrigger className="shrink-0" />}
+            <div className="relative w-full">
+              <Search
+                className={cn(
+                  "absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-[#5e5e5e]",
                 )}
-              </DialogContent>
-            </Dialog>
+              />
+              <Input
+                placeholder="Search datasets, settings..."
+                className="placeholder:text-muted-foreground/50 border-1 pl-10 select-none sm:w-60"
+              />
+            </div>
           </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="hover:bg-transparent">
+                <Avatar className="h-8 w-8">
+                  {/* <AvatarImage src="/placeholder.svg?height=32&width=32" /> */}
+                  <AvatarFallback className="normal-case">
+                    {user?.username.slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel className="pb-0 text-base">{user?.username}</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-muted-foreground/70 pt-0 text-sm">
+                {user?.email}
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="mx-2" />
+              {userMenuNav.map((item) => (
+                <DropdownMenuItem key={item.title} asChild className="hover:bg-sidebar-accent">
+                  <Link href={item.href} className={cn(navItemDropdown)}>
+                    {item.icon}
+                    {item.title}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator className="mx-2 h-[0.5px]" />
+              <DropdownMenuItem
+                className={cn(navItemDropdown, "hover:bg-sidebar-accent")}
+                onClick={() => signout()}
+              >
+                <LogOut />
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-      </div>
+      </header>
     </motion.div>
   );
 }
