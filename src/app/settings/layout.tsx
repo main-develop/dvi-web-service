@@ -1,8 +1,8 @@
 import { TooltipProvider } from "@/src/components/ui/tooltip";
 import { SidebarProvider } from "@/src/components/ui/sidebar";
-import { DashboardSidebar } from "@/src/components/dashboard/DashboardSidebar";
+import { SettingsSidebar } from "@/src/components/settings/SettingsSidebar";
 
-export default function DashboardLayout({
+export default function SettingsLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -17,7 +17,7 @@ export default function DashboardLayout({
       }
     >
       <TooltipProvider>
-        <DashboardSidebar />
+        <SettingsSidebar />
         <main className="flex flex-1 flex-col">{children}</main>
       </TooltipProvider>
     </SidebarProvider>

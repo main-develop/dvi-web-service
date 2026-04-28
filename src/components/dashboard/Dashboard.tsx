@@ -18,7 +18,7 @@ import Link from "next/link";
 import { useAuth } from "@/src/context/AuthContext";
 import { cn } from "@/src/lib/utils";
 import { SidebarTrigger, useSidebar } from "../ui/sidebar";
-import { navItemBase } from "../ui/app-sidebar";
+import { navItemBase } from "../settings/SettingsSidebar";
 
 const userMenuNav = [
   {
@@ -38,7 +38,7 @@ const userMenuNav = [
   },
 ];
 
-const navItemDropdown = `${navItemBase} tracking-[0.02rem] w-full`;
+const navItemDropdown = `${navItemBase} tracking-[0.02rem] w-full hover:!bg-sidebar-accent`;
 
 export default function Dashboard() {
   const { user, signout } = useAuth();
@@ -49,9 +49,9 @@ export default function Dashboard() {
       variants={getItemVariants(0, 0, 0.7)}
       initial="hidden"
       animate="visible"
-      className="flex flex-col"
+      className="flex flex-col px-6"
     >
-      <header className="flex h-13 items-center px-6">
+      <header className="flex h-13 items-center">
         <div className="flex w-full items-center justify-between gap-4">
           <div className="flex w-full items-center gap-4 sm:w-auto">
             {isMobile && <SidebarTrigger className="shrink-0" />}
@@ -62,8 +62,8 @@ export default function Dashboard() {
                 )}
               />
               <Input
-                placeholder="Search datasets, settings..."
-                className="placeholder:text-muted-foreground/50 border-1 pl-10 select-none sm:w-60"
+                placeholder="Search..."
+                className="placeholder:text-muted-foreground/50 h-7 border-1 pl-10 select-none sm:w-60"
               />
             </div>
           </div>
@@ -85,7 +85,7 @@ export default function Dashboard() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="mx-2" />
               {userMenuNav.map((item) => (
-                <DropdownMenuItem key={item.title} asChild className="hover:bg-sidebar-accent">
+                <DropdownMenuItem key={item.title} asChild>
                   <Link href={item.href} className={cn(navItemDropdown)}>
                     {item.icon}
                     {item.title}
@@ -93,10 +93,7 @@ export default function Dashboard() {
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator className="mx-2 h-[0.5px]" />
-              <DropdownMenuItem
-                className={cn(navItemDropdown, "hover:bg-sidebar-accent")}
-                onClick={() => signout()}
-              >
+              <DropdownMenuItem className={cn(navItemDropdown)} onClick={() => signout()}>
                 <LogOut />
                 Sign out
               </DropdownMenuItem>
