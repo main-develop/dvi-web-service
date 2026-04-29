@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useState } from "react";
 import ChangeEmailForm, { ChangeEmailFormRef } from "./ChangeEmailForm";
 import ChangeUsernameForm, { ChangeUsernameFormRef } from "./ChangeUsernameForm";

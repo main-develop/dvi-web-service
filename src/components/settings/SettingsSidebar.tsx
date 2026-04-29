@@ -1,44 +1,12 @@
 "use client";
 
-import { LucideMousePointerClick, Settings, ShieldCheck, User } from "lucide-react";
-import { Logo } from "../ui/logo";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarTrigger,
-  useSidebar,
-} from "../ui/sidebar";
-import { useState } from "react";
-import { motion } from "motion/react";
+import { LucideMousePointerClick, SettingsIcon, ShieldCheck, User } from "lucide-react";
 import { getItemVariants } from "@/src/utils/get-motion-variants";
+import { motion } from "motion/react";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 import { cn } from "@/src/lib/utils";
-
-type Section = "General" | "Account" | "Appearance" | "Privacy";
-
-const sidebarNav = [
-  {
-    title: "General",
-    icon: <Settings />,
-  },
-  {
-    title: "Account",
-    icon: <User />,
-  },
-  {
-    title: "Appearance",
-    icon: <LucideMousePointerClick />,
-  },
-  {
-    title: "Privacy",
-    icon: <ShieldCheck />,
-  },
-];
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export const navItemBase =
   "text-primary-foreground hover:text-primary cursor-pointer text-[0.813rem] " +
@@ -48,68 +16,60 @@ export const navItemSidebar =
   `${navItemBase} hover:bg-sidebar-accent/60 tracking-[0.04rem] font-medium ` +
   "!ring-0 !outline-none select-none";
 
-export function SettingsSidebar() {
-  const { state, isMobile } = useSidebar();
-  const isCollapsed = state === "collapsed";
-  const [activeSection, setActiveSection] = useState<Section>("General");
+const settingsSidebarNav = [
+  {
+    title: "General",
+    href: "/settings/general",
+    icon: <SettingsIcon />,
+  },
+  {
+    title: "Account",
+    href: "/settings/account",
+    icon: <User />,
+  },
+  {
+    title: "Appearance",
+    href: "/settings/appearance",
+    icon: <LucideMousePointerClick />,
+  },
+  {
+    title: "Privacy",
+    href: "/settings/privacy",
+    icon: <ShieldCheck />,
+  },
+];
+
+export default function SettingsSidebar() {
+  const pathname = usePathname();
 
   return (
-    <motion.div variants={getItemVariants(0, 0, 0.7)} initial="hidden" animate="visible">
-      <Sidebar collapsible="icon" className="!border-r-0">
-        <SidebarHeader className="bg-background">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              {!isMobile && (
-                <div
-                  className={cn(
-                    `flex h-8 items-center justify-between pt-1 ${isCollapsed ? "pl-0" : "pl-2"}`,
-                  )}
-                >
-                  <div
-                    className={cn(
-                      "px-0 transition-opacity duration-400",
-                      `${isCollapsed ? "pointer-events-none w-0 overflow-hidden opacity-0" : "opacity-100"}`,
-                    )}
-                  >
-                    <Logo width={46} href="/dashboard" />
-                  </div>
-                </div>
-              )}
+    <motion.div
+      variants={getItemVariants(0, 0, 0.7)}
+      initial="hidden"
+      animate="visible"
+      className="sticky top-11 flex w-70 flex-shrink-0 flex-col gap-3 self-start"
+    >
+      <h2 className="uppercase">Settings</h2>
 
-              {isMobile && (
-                <div className="flex items-center pt-1 pl-2">
-                  <Logo width={46} href="/dashboard" />
-                </div>
+      <SidebarMenu>
+        <SidebarMenuItem className="flex flex-col gap-1">
+          {settingsSidebarNav.map((item) => (
+            <SidebarMenuButton
+              key={item.title}
+              className={cn(
+                navItemSidebar,
+                pathname === item.href ? "bg-sidebar-accent/60 text-primary" : "",
               )}
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarHeader>
-        <SidebarContent className="bg-background">
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem className="flex flex-col gap-1">
-                  {sidebarNav.map((item) => (
-                    <SidebarMenuButton
-                      key={item.title}
-                      onClick={() => setActiveSection(item.title as Section)}
-                      className={cn(
-                        navItemSidebar,
-                        `${activeSection === item.title ? "bg-sidebar-accent/60 text-primary" : ""}`,
-                      )}
-                      tooltip={item.title}
-                    >
-                      {item.icon}
-                      {item.title}
-                    </SidebarMenuButton>
-                  ))}
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-          <SidebarGroup />
-        </SidebarContent>
-      </Sidebar>
+              asChild
+            >
+              <Link href={item.href}>
+                {item.icon}
+                {item.title}
+              </Link>
+            </SidebarMenuButton>
+          ))}
+        </SidebarMenuItem>
+      </SidebarMenu>
     </motion.div>
   );
 }

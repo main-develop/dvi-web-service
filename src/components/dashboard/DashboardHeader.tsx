@@ -23,12 +23,12 @@ import { getItemVariants } from "@/src/utils/get-motion-variants";
 const userMenuNav = [
   {
     title: "Account",
-    href: "/settings",
+    href: "/settings/account",
     icon: <User />,
   },
   {
     title: "Settings",
-    href: "/settings",
+    href: "/settings/general",
     icon: <Settings />,
   },
   {

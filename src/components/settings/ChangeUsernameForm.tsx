@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle } from "react";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { changeUsernameSchema, ChangeUsernameSchema } from "@/src/lib/zod-schemas/user";
 import { sendChangeUsernameRequest } from "@/src/api/user-requests";
@@ -28,7 +28,10 @@ const ChangeUsernameForm = forwardRef<ChangeUsernameFormRef, Props>(({ onDirtyCh
   });
   const formRootErrors = form.formState.errors.root;
 
-  const watchedUsername = form.watch("username");
+  const watchedUsername = useWatch({
+    control: form.control,
+    name: "username",
+  });
   const hasChanged = watchedUsername !== currentUsername;
 
   useEffect(() => {

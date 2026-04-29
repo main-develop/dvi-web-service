@@ -4,7 +4,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form"
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { Spinner } from "../ui/spinner";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { changePasswordSchema, ChangePasswordSchema } from "@/src/lib/zod-schemas/user";
 import { sendChangePasswordRequest } from "@/src/api/user-requests";
@@ -43,7 +43,10 @@ export default function ChangePasswordForm() {
   });
   const formRootErrors = form.formState.errors.root;
 
-  const watchedPassword = form.watch("newPassword");
+  const watchedPassword = useWatch({
+    control: form.control,
+    name: "newPassword",
+  });
   const hasChanged = watchedPassword !== "";
 
   const watchedPasswordResult: ZxcvbnResult | null = watchedPassword

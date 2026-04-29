@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { changeEmailSchema, ChangeEmailSchema } from "@/src/lib/zod-schemas/user";
 import { sendChangeEmailRequest } from "@/src/api/user-requests";
@@ -46,7 +46,10 @@ const ChangeEmailForm = forwardRef<ChangeEmailFormRef, Props>(({ onDirtyChange }
   });
   const formRootErrors = form.formState.errors.root;
 
-  const watchedEmail = form.watch("newEmail");
+  const watchedEmail = useWatch({
+    control: form.control,
+    name: "newEmail",
+  });
   const hasChanged = watchedEmail !== currentEmail;
 
   useEffect(() => {

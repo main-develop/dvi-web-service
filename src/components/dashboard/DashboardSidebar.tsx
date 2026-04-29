@@ -14,14 +14,13 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "../ui/sidebar";
-import { useState } from "react";
 import Image from "next/image";
 import logoSmallImage from "@/public/logo-small.png";
 import { motion } from "motion/react";
 import { getItemVariants } from "@/src/utils/get-motion-variants";
 import { cn } from "@/src/lib/utils";
-
-type Section = "Home" | "Datasets" | "Visualizations";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 const sidebarNav = [
   {
@@ -52,7 +51,7 @@ export const navItemSidebar =
 export function DashboardSidebar() {
   const { state, isMobile } = useSidebar();
   const isCollapsed = state === "collapsed";
-  const [activeSection, setActiveSection] = useState<Section>("Home");
+  const pathname = usePathname();
 
   return (
     <motion.div
@@ -77,7 +76,7 @@ export function DashboardSidebar() {
                       `${isCollapsed ? "pointer-events-none w-0 overflow-hidden opacity-0" : "opacity-100"}`,
                     )}
                   >
-                    <Logo width={46} href="/dashboard" />
+                    <Logo width={46} href="/dashboard/home" />
                   </div>
                   {isCollapsed && (
                     <div className="group relative ml-0.5 flex h-7 w-9 items-center justify-center">
@@ -105,7 +104,7 @@ export function DashboardSidebar() {
 
               {isMobile && (
                 <div className="flex items-center pt-1 pl-2">
-                  <Logo width={46} href="/dashboard" />
+                  <Logo width={46} href="/dashboard/home" />
                 </div>
               )}
             </SidebarMenuItem>
@@ -119,15 +118,17 @@ export function DashboardSidebar() {
                   {sidebarNav.map((item) => (
                     <SidebarMenuButton
                       key={item.title}
-                      onClick={() => setActiveSection(item.title as Section)}
                       className={cn(
                         navItemSidebar,
-                        `${activeSection === item.title ? "bg-sidebar-accent/60 text-primary" : ""}`,
+                        pathname === item.href ? "bg-sidebar-accent/60 text-primary" : "",
                       )}
                       tooltip={item.title}
+                      asChild
                     >
-                      {item.icon}
-                      {item.title}
+                      <Link href={item.href}>
+                        {item.icon}
+                        {item.title}
+                      </Link>
                     </SidebarMenuButton>
                   ))}
                 </SidebarMenuItem>
