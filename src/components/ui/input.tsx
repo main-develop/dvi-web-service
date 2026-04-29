@@ -5,12 +5,13 @@ import { Eye, EyeOff } from "lucide-react";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
+  labelClassName?: string;
   onEyeClick?: () => void;
   eyeVisibleCondition?: boolean;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, onEyeClick, eyeVisibleCondition, type, ...props }, ref) => {
+  ({ className, label, labelClassName, onEyeClick, eyeVisibleCondition, type, ...props }, ref) => {
     const inputClasses = cn(
       "file:text-foreground placeholder:text-muted-foreground bg-transparent border-input",
       "border-2 h-9 w-full min-w-0 rounded-md px-3 py-1 text-base shadow-xs outline-none",
@@ -47,6 +48,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               "hover:text-muted-foreground text-muted-foreground/60 absolute",
               "inset-y-2.5 right-2 flex size-1 items-center justify-center rounded-none",
               "bg-background hover:bg-background transition-all duration-300",
+              labelClassName,
             )}
           >
             {eyeVisibleCondition ? <EyeOff /> : <Eye />}
@@ -64,6 +66,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             "peer-placeholder-shown:scale-100 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4",
             "peer-aria-invalid:peer-placeholder-shown:text-muted-foreground/60",
             "peer-aria-invalid:text-destructive peer-focus:peer-aria-invalid:text-destructive",
+            labelClassName,
           )}
         >
           {label}

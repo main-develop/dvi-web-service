@@ -26,14 +26,17 @@ type Section = "Home" | "Datasets" | "Visualizations";
 const sidebarNav = [
   {
     title: "Home",
+    href: "/dashboard/home",
     icon: <Home />,
   },
   {
     title: "Datasets",
+    href: "/dashboard/datasets",
     icon: <Files />,
   },
   {
     title: "Visualizations",
+    href: "/dashboard/visualizations",
     icon: <ChartColumnIcon />,
   },
 ];
@@ -52,8 +55,13 @@ export function DashboardSidebar() {
   const [activeSection, setActiveSection] = useState<Section>("Home");
 
   return (
-    <motion.div variants={getItemVariants(0, 0, 0.7)} initial="hidden" animate="visible">
-      <Sidebar collapsible="icon" className="!border-r-0">
+    <motion.div
+      variants={getItemVariants(0, 0, 0.7)}
+      initial="hidden"
+      animate="visible"
+      className="sticky top-0 h-screen flex-shrink-0"
+    >
+      <Sidebar collapsible="icon">
         <SidebarHeader className="bg-background">
           <SidebarMenu>
             <SidebarMenuItem>
