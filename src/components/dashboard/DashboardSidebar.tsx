@@ -21,6 +21,7 @@ import { getItemVariants } from "@/src/utils/get-motion-variants";
 import { cn } from "@/src/lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import SettingsSidebar, { settingsSidebarNav } from "../settings/SettingsSidebar";
 
 const sidebarNav = [
   {
@@ -49,7 +50,7 @@ export const navItemSidebar =
   "!ring-0 !outline-none select-none";
 
 export function DashboardSidebar() {
-  const { state, isMobile } = useSidebar();
+  const { state, toggleSidebar, isMobile } = useSidebar();
   const isCollapsed = state === "collapsed";
   const pathname = usePathname();
 
@@ -76,8 +77,9 @@ export function DashboardSidebar() {
                       `${isCollapsed ? "pointer-events-none w-0 overflow-hidden opacity-0" : "opacity-100"}`,
                     )}
                   >
-                    <Logo width={46} href="/dashboard/home" />
+                    <Logo width={46} />
                   </div>
+
                   {isCollapsed && (
                     <div className="group relative ml-0.5 flex h-7 w-9 items-center justify-center">
                       <Image
@@ -89,6 +91,7 @@ export function DashboardSidebar() {
                           "duration-200 select-none group-hover:opacity-0",
                         )}
                       />
+
                       <div
                         className={cn(
                           "absolute opacity-0 transition-opacity duration-200 group-hover:opacity-100",
@@ -98,18 +101,22 @@ export function DashboardSidebar() {
                       </div>
                     </div>
                   )}
+
                   {!isCollapsed && <SidebarTrigger />}
                 </div>
               )}
 
               {isMobile && (
                 <div className="flex items-center pt-1 pl-2">
-                  <Logo width={46} href="/dashboard/home" />
+                  <div onClick={() => toggleSidebar()}>
+                    <Logo width={46} />
+                  </div>
                 </div>
               )}
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
+
         <SidebarContent className="bg-background">
           <SidebarGroup>
             <SidebarGroupContent>
@@ -122,6 +129,7 @@ export function DashboardSidebar() {
                         navItemSidebar,
                         pathname === item.href ? "bg-sidebar-accent/60 text-primary" : "",
                       )}
+                      onClick={isMobile ? () => toggleSidebar() : undefined}
                       tooltip={item.title}
                       asChild
                     >
@@ -135,7 +143,38 @@ export function DashboardSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
-          <SidebarGroup />
+
+          {isMobile && pathname.startsWith("/settings") && (
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <h2 className="pl-2 uppercase">Settings</h2>
+                  </SidebarMenuItem>
+
+                  <SidebarMenuItem className="flex flex-col gap-1">
+                    {settingsSidebarNav.map((item) => (
+                      <SidebarMenuButton
+                        key={item.title}
+                        className={cn(
+                          navItemSidebar,
+                          pathname === item.href ? "bg-sidebar-accent/60 text-primary" : "",
+                        )}
+                        onClick={() => toggleSidebar()}
+                        tooltip={item.title}
+                        asChild
+                      >
+                        <Link href={item.href}>
+                          {item.icon}
+                          {item.title}
+                        </Link>
+                      </SidebarMenuButton>
+                    ))}
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          )}
         </SidebarContent>
       </Sidebar>
     </motion.div>

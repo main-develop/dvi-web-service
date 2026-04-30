@@ -58,7 +58,7 @@ const ChangeEmailForm = forwardRef<ChangeEmailFormRef, Props>(({ onDirtyChange }
 
   const onSubmit = async (data: ChangeEmailSchema) => {
     const response = await sendChangeEmailRequest(data);
-
+    setDialogOpen(true);
     if (response.ok) {
       setDialogOpen(true);
     } else {
@@ -96,7 +96,7 @@ const ChangeEmailForm = forwardRef<ChangeEmailFormRef, Props>(({ onDirtyChange }
   return (
     <>
       <Form {...form}>
-        <form className="mt-4 mb-2" noValidate onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="mt-4 mb-2 w-full" noValidate onSubmit={form.handleSubmit(onSubmit)}>
           {formFields.map(({ name, type, label }) => (
             <FormField
               key={name}
@@ -120,7 +120,7 @@ const ChangeEmailForm = forwardRef<ChangeEmailFormRef, Props>(({ onDirtyChange }
                           eyeVisibleCondition={passwordVisible}
                           disabled={name === "currentPassword" && !hasChanged}
                           onEyeClick={() => setPasswordVisible((prev) => !prev)}
-                          className="w-[360px] disabled:cursor-default"
+                          className="disabled:cursor-default"
                           labelClassName="!bg-[#1b1b1b]"
                           {...field}
                         />

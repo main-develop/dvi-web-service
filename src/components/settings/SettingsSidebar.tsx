@@ -16,7 +16,7 @@ export const navItemSidebar =
   `${navItemBase} hover:bg-sidebar-accent/60 tracking-[0.04rem] font-medium ` +
   "!ring-0 !outline-none select-none";
 
-const settingsSidebarNav = [
+export const settingsSidebarNav = [
   {
     title: "General",
     href: "/settings/general",
@@ -47,7 +47,7 @@ export default function SettingsSidebar() {
       variants={getItemVariants(0, 0, 0.7)}
       initial="hidden"
       animate="visible"
-      className="sticky top-11 flex w-70 flex-shrink-0 flex-col gap-3 self-start"
+      className="sticky top-11 hidden flex-shrink-0 flex-col gap-3 self-start sm:flex sm:w-70"
     >
       <h2 className="uppercase">Settings</h2>
 

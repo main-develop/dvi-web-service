@@ -69,20 +69,14 @@ const ChangeUsernameForm = forwardRef<ChangeUsernameFormRef, Props>(({ onDirtyCh
 
   return (
     <Form {...form}>
-      <form className="mt-6" noValidate onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="mt-6 w-full" noValidate onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input
-                  type="text"
-                  label="Username"
-                  {...field}
-                  className="w-[360px]"
-                  labelClassName="!bg-[#1b1b1b]"
-                />
+                <Input type="text" label="Username" {...field} labelClassName="!bg-[#1b1b1b]" />
               </FormControl>
 
               <FormMessage>

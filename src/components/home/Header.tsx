@@ -9,6 +9,7 @@ import { cn } from "@/src/lib/utils";
 import { createPortal } from "react-dom";
 import { getNavLinks } from "@/src/utils/get-nav-links";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useAuth } from "@/src/context/AuthContext";
 
 const navLinks = [
   { href: "/about", title: "ABOUT" },
@@ -42,6 +43,7 @@ const svgPathStyle = [
 ];
 
 export default function Header() {
+  const { user } = useAuth();
   const pathname = usePathname();
   const isHome = pathname === "/";
   const router = useRouter();
@@ -71,10 +73,13 @@ export default function Header() {
 
   return (
     <motion.header
-      className={cn("sticky top-0 z-50 bg-transparent px-7 py-3",
-        "transition-[box-shadow,backdrop-filter] duration-500 ease-in", {
-        "shadow-md backdrop-blur-sm": isScrolled || isMobileMenuOpen,
-      })}
+      className={cn(
+        "sticky top-0 z-50 bg-transparent px-7 py-3",
+        "transition-[box-shadow,backdrop-filter] duration-500 ease-in",
+        {
+          "shadow-md backdrop-blur-sm": isScrolled || isMobileMenuOpen,
+        },
+      )}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
@@ -89,7 +94,16 @@ export default function Header() {
               <ul className="flex flex-1 items-center justify-center gap-7 px-6">
                 {getNavLinks(navLinks, "text-sm font-semibold")}
               </ul>
-              <div className="flex justify-end gap-2">{getSignButtons(router)}</div>
+              {user ? (
+                <Button
+                  onClick={() => router.push("/dashboard/home")}
+                  className="tracking-tight transition-all duration-400"
+                >
+                  Dashboard
+                </Button>
+              ) : (
+                <div className="flex justify-end gap-2">{getSignButtons(router)}</div>
+              )}
             </div>
             <div className="flex flex-1 items-center justify-end md:hidden">
               <Button

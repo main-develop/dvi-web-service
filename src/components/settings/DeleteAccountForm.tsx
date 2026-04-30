@@ -60,7 +60,7 @@ export default function DeleteAccountForm() {
   return (
     <>
       <Form {...form}>
-        <form className="mt-4" noValidate>
+        <form className="mt-4 w-full sm:w-[338px]" noValidate>
           <FormField
             control={form.control}
             name="password"
@@ -80,7 +80,6 @@ export default function DeleteAccountForm() {
                         type="password"
                         label="Current Password"
                         disabled={!deleteAccountClicked}
-                        className="w-[360px]"
                         labelClassName="!bg-[#1b1b1b]"
                         eyeVisibleCondition={passwordVisible}
                         onEyeClick={() => setPasswordVisible((prev) => !prev)}

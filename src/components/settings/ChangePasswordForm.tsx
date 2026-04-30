@@ -94,7 +94,11 @@ export default function ChangePasswordForm() {
   return (
     <>
       <Form {...form}>
-        <form className="mt-6" noValidate onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="mt-6 w-full sm:w-[338px]"
+          noValidate
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <FormField
             control={form.control}
             name="newPassword"
@@ -105,7 +109,6 @@ export default function ChangePasswordForm() {
                     type="password"
                     label="New Password"
                     eyeVisibleCondition={visibleFields["newPassword"]}
-                    className="w-[360px]"
                     labelClassName="!bg-[#1b1b1b]"
                     onEyeClick={() =>
                       setVisibleFields((prev) => ({
@@ -178,7 +181,6 @@ export default function ChangePasswordForm() {
                           label={label}
                           disabled={!hasChanged}
                           eyeVisibleCondition={visibleFields[name as string]}
-                          className="w-[360px]"
                           labelClassName="!bg-[#1b1b1b] !overflow-visible"
                           onEyeClick={() =>
                             setVisibleFields((prev) => ({

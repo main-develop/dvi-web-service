@@ -51,7 +51,7 @@ export default function AccountSettings() {
         <div className="bg-sidebar-accent/60 flex flex-col rounded-md p-4">
           <h2 className="uppercase">Profile</h2>
 
-          <div className="flex flex-row gap-4">
+          <div className="flex flex-col sm:flex-row sm:gap-4">
             <ChangeUsernameForm ref={usernameRef} onDirtyChange={setUsernameChanged} />
             <ChangeEmailForm ref={emailRef} onDirtyChange={setEmailChanged} />
           </div>
