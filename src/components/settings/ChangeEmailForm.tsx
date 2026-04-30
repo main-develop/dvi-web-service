@@ -91,6 +91,7 @@ const ChangeEmailForm = forwardRef<ChangeEmailFormRef, Props>(({ onDirtyChange }
 
   const onSuccess = async () => {
     await refreshUser();
+    setDialogOpen(false);
   };
 
   return (
