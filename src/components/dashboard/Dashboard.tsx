@@ -9,8 +9,9 @@ export default function Dashboard() {
       variants={getItemVariants(0, 0, 0.7)}
       initial="hidden"
       animate="visible"
-      className="flex flex-col"
+      className="flex flex-col justify-center h-[638px]"
     >
+      <span className="text-center">In development...</span>
     </motion.div>
   );
 }
