@@ -177,7 +177,7 @@ export default function OTPVerification({
       className="space-y-6"
     >
       <Form {...form}>
-        <p className="text-center text-sm">
+        <p className="text-center text-muted-foreground text-sm">
           A 6-digit code has been sent to <span className="font-bold break-all">{email}</span>.
           <br />
           Enter it below.
