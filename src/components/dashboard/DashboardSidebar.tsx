@@ -21,7 +21,7 @@ import { getItemVariants } from "@/src/utils/get-motion-variants";
 import { cn } from "@/src/lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import SettingsSidebar, { settingsSidebarNav } from "../settings/SettingsSidebar";
+import { settingsSidebarNav } from "../settings/SettingsSidebar";
 
 const sidebarNav = [
   {
