@@ -58,7 +58,7 @@ const ChangeEmailForm = forwardRef<ChangeEmailFormRef, Props>(({ onDirtyChange }
 
   const onSubmit = async (data: ChangeEmailSchema) => {
     const response = await sendChangeEmailRequest(data);
-    setDialogOpen(true);
+
     if (response.ok) {
       setDialogOpen(true);
     } else {
