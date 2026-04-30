@@ -39,7 +39,7 @@ export default function Signin() {
     const response = await signin(data);
 
     if (response.ok) {
-      router.push("/dashboard");
+      router.push("/dashboard/home");
     } else {
       const responseType = response.data.type;
       const message = response.data.errors[0].detail;
