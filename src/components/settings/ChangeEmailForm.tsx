@@ -56,6 +56,12 @@ const ChangeEmailForm = forwardRef<ChangeEmailFormRef, Props>(({ onDirtyChange }
     onDirtyChange(hasChanged);
   }, [hasChanged]);
 
+  useEffect(() => {
+    if (user) {
+      form.reset({ newEmail: user.email, currentPassword: "" });
+    }
+  }, [user]);
+
   const onSubmit = async (data: ChangeEmailSchema) => {
     const response = await sendChangeEmailRequest(data);
 

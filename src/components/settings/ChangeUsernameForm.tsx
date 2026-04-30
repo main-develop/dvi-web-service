@@ -38,6 +38,12 @@ const ChangeUsernameForm = forwardRef<ChangeUsernameFormRef, Props>(({ onDirtyCh
     onDirtyChange(hasChanged);
   }, [hasChanged]);
 
+  useEffect(() => {
+    if (user) {
+      form.reset({ username: user.username });
+    }
+  }, [user]);
+
   const onSubmit = async (data: ChangeUsernameSchema) => {
     const response = await sendChangeUsernameRequest(data);
 
